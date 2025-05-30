@@ -1,0 +1,125 @@
+.sidebar {
+    width: 16.66%;
+    min-width: 250px;
+    height: 100vh;
+    background-color: #C1E1C1;
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    flex-shrink: 0;
+}
+
+@media screen and (max-width: 720px) {
+    .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 1000;
+        background-color: #C1E1C1;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebarOpen {
+        transform: translateX(0);
+    }
+}
+
+.burgerMenu {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.burgerMenu img {
+    width: 30px;
+    height: 30px;
+}
+
+@media screen and (max-width: 720px) {
+    .burgerMenu {
+        display: block;
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.navLink {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 20px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.navLink:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.1); /* Gleicher Effekt wie beim Hover */
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+}
+
+.separator {
+    border: none;
+    border-top: 2px solid #636363; /* Stärkerer Strich */
+    margin: 10px 0; /* Etwas mehr Abstand */
+}
+
+.footer {
+    margin-top: auto;
+    padding-top: 20px;
+}
