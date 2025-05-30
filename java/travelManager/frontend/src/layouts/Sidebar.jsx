@@ -56,6 +56,15 @@ export default function Sidebar() {
                                 <img src="/assets/icons/group.png" alt="Benutzerverwaltung Icon" className={styles.icon} />
                                 Benutzerverwaltung
                             </a>
+                            <a href="/admin/create-admin" className={`${styles.navLink} ${isActive("/admin/create-admin")}`}>
+                                <img
+                                    src="/assets/icons/administrate.png" /* Ein passendes Admin-Icon kann hier verwendet werden */
+                                    alt="Admin erstellen Icon"
+                                    className={styles.icon}
+                                />
+                                Admin erstellen
+                            </a>
+
                         </>
                     )}
 
