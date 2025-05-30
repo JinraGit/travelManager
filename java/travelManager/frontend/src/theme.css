@@ -1,0 +1,25 @@
+:root {
+    color-scheme: light;
+}
+
+html, body {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+[data-bs-theme="dark"],
+html[data-bs-theme="dark"],
+body[data-bs-theme="dark"] {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+* {
+    --bs-body-bg: #fff !important;
+    --bs-body-color: #000 !important;
+}
+
+.dropdown-menu, .card {
+    background-color: #fff !important;
+    color: #000 !important;
+}

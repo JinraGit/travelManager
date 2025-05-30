@@ -1,0 +1,53 @@
+.message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-100%);
+    animation: slideDown 0.3s ease forwards, slideUp 0.3s ease 2.7s forwards;
+    z-index: 100000;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.success {
+    background-color: rgba(9, 156, 9, 0.9);
+    color: white;
+}
+
+.error {
+    background-color: rgba(255, 0, 0, 0.9);
+    color: white;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(25%);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(25%);
+    }
+    to {
+        transform: translateY(-100%);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .message {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+    }
+}

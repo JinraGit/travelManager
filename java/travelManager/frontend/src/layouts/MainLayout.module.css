@@ -1,0 +1,23 @@
+.appWrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.mainContent {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .appWrapper {
+        flex-direction: column;
+    }
+
+    .mainContent {
+        padding: 0;
+        margin: 0;
+    }
+}

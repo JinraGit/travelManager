@@ -1,0 +1,29 @@
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(140deg, #ffffff, #C1E1C1);
+}
+
+.card {
+    background-color: #C1E1C1;
+    border: none;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto 1rem;
+    height: 60px;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: #2e4e2e;
+    margin-bottom: 1rem;
+}
