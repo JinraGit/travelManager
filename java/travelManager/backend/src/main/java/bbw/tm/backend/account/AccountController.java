@@ -1,8 +1,5 @@
 package bbw.tm.backend.account;
 
-import bbw.tm.backend.gradebook.grade.GradeRepository;
-import bbw.tm.backend.person.PersonRepository;
-import bbw.tm.backend.person.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -63,10 +60,6 @@ public class AccountController {
         // Account erstellen (Event wird ausgelöst, wenn APPRENTICE vorhanden ist)
         Account createdAccount = accountService.create(account);        // Response bereitstellen
         AccountResponseDTO accountResponseDTO = AccountMapper.toDTO(createdAccount);
-        personRepository.findByAccount(createdAccount).ifPresent(person -> {
-            accountResponseDTO.setPersonId(person.getId());
-            AccountMapper.updateWithVacationDays(accountResponseDTO, person.getVacationDays());
-        });
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of(
                         "message", "Account wurde erfolgreich erstellt. Falls die Rolle APPRENTICE zugewiesen wurde, wird automatisch eine verknüpfte Person erstellt.",
@@ -93,13 +86,9 @@ public class AccountController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(accountSignInDTO.getEmail(), accountSignInDTO.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            Account account = (Account) authentication.getPrincipal();            String token = accountService.generateToken(account);
+            Account account = (Account) authentication.getPrincipal();
+            String token = accountService.generateToken(account);
             TokenResponseDTO dto = AccountMapper.toDTO(account, token);
-            personRepository.findByAccount(account)
-                    .ifPresent(person -> {
-                        dto.getAccount().setPersonId(person.getId());
-                        AccountMapper.updateWithVacationDays(dto.getAccount(), person.getVacationDays());
-                    });
             return ResponseEntity.ok(dto);
         } catch (ResponseStatusException e) {
             assert e.getReason() != null;
@@ -121,15 +110,12 @@ public class AccountController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Liste aller Benutzerkonten wurde erfolgreich abgerufen.")
-    })    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
+    })
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
         List<AccountResponseDTO> accountDTOs = accounts.stream()
                 .map(account -> {
                     AccountResponseDTO dto = AccountMapper.toDTO(account);
-                    personRepository.findByAccount(account).ifPresent(person -> {
-                        dto.setPersonId(person.getId());
-                        AccountMapper.updateWithVacationDays(dto, person.getVacationDays());
-                    });
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -150,11 +136,6 @@ public class AccountController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found with id: " + id));
 
         AccountResponseDTO accountDTO = AccountMapper.toDTO(account);
-
-        personRepository.findByAccount(account).ifPresent(person -> {
-            accountDTO.setPersonId(person.getId());
-            AccountMapper.updateWithVacationDays(accountDTO, person.getVacationDays());
-        });
 
         return ResponseEntity.ok(accountDTO);
     }

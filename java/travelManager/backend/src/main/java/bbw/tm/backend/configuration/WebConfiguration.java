@@ -121,14 +121,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.POST, "/accounts/admin/create").hasRole(Roles.ADMIN.name())
 
                         // für Admin und Coach spezifische Endpunkte
-                        .requestMatchers(HttpMethod.PUT, "/accounts/*/enabled").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name())
-                        .requestMatchers(HttpMethod.DELETE, "/accounts/*").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name())
-                        .requestMatchers(HttpMethod.PUT, "/persons/account/*/vacationdays").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name(), Roles.APPRENTICE.name())
-                        .requestMatchers(HttpMethod.GET, "/persons/account/*/flextime").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/persons/account/*/flextime").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name(), Roles.APPRENTICE.name())
-                        .requestMatchers(HttpMethod.GET, "/persons/**").authenticated()
-                        .requestMatchers("/persons/**").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name())
-                        .requestMatchers("/teams/**").hasAnyRole(Roles.ADMIN.name(), Roles.COACH.name())
+                        .requestMatchers(HttpMethod.DELETE, "/accounts/*").hasAnyRole(Roles.ADMIN.name())
 
                         // Alle anderen Anfragen erlauben
                         .anyRequest().permitAll()

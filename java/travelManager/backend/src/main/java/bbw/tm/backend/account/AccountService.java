@@ -1,10 +1,10 @@
 package bbw.tm.backend.account;
 
-import bbw.tm.configuration.JWTConfiguration;
-import bbw.tm.enums.Roles;
+import bbw.tm.backend.configuration.JWTConfiguration;
+import bbw.tm.backend.enums.Roles;
 import bbw.tm.backend.events.AccountCreatedEvent;
-import bbw.tm.role.Role;
-import bbw.tm.role.RoleRepository;
+import bbw.tm.backend.role.Role;
+import bbw.tm.backend.role.RoleRepository;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
@@ -75,7 +75,6 @@ public class AccountService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(account.
                 getPassword()));
 
-        account.setEnabled(false);
 
         // Standartrolle zuweisen, falls keine Rolle definiert ist
         if (account.getRoles() == null || account.getRoles().isEmpty()) {

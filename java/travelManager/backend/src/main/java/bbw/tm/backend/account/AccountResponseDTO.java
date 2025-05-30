@@ -8,8 +8,5 @@ public class AccountResponseDTO {
     private Integer id;
     private String username;
     private String email;
-    private Set<String> roles;    private boolean enabled;
-    private Integer personId;
-    private Integer vacationDays = 30;
-
+    private Set<String> roles;
 }

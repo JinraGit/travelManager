@@ -1,7 +1,12 @@
 @echo off
+set JAVA_HOME=C:\dev\jdk-21.0.7
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+
+@echo off
 echo *** Wechsel in Backend-Verzeichnis ***
 cd .\backend\
-echo *** Führe Gradle Build (ohne Tests) aus ***
+echo *** Fuehre Gradle Build (ohne Tests) aus ***
 call .\gradlew clean build -x test
 if %errorlevel% neq 0 (
     echo Fehler beim Gradle Build!
@@ -12,7 +17,7 @@ cd ..
 echo *** Wechsel in Frontend-Verzeichnis ***
 cd .\frontend\
 rmdir .\node_modules /s /q
-echo *** Führe npm install aus ***
+echo *** Fuehre npm install aus ***
 call npm install
 if %errorlevel% neq 0 (
     echo Fehler bei npm install!

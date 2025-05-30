@@ -1,21 +1,16 @@
 package bbw.tm.backend.account;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.List;
-import java.util.Optional;
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class AccountRequestDTO extends AccountSignInDTO {
+    @NotBlank(message = "Username can't be blank")
+    private String username;
 
-public interface AccountRepository extends JpaRepository<Account, Integer> {
-    Optional<Account> findByEmail(String email);
-    boolean existsByUsernameOrEmail(String userName, String email);
-
-    @Query("SELECT a FROM Account a JOIN a.roles r WHERE r.name = :roleName")
-    List<Account> findByRoleName(@Param("roleName") String roleName);
-
-    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.roles WHERE a.id = :id")
-    Optional<Account> findByIdWithRoles(@Param("id") Integer id);
-
-
+    @NotBlank(message = "Role is required")
+    private String role;
 }
+

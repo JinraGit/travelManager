@@ -1,4 +1,4 @@
-package cbbw.tm.backend.account;
+package bbw.tm.backend.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,4 +17,3 @@ public class AccountSignInDTO {
     private String password;
 
 }
-$
