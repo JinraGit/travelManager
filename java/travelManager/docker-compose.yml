@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  green-backend:
+    build: ./backend
+    container_name: travelmanager-backend
+    #    restart: always
+    depends_on:
+      green-db:
+        condition: service_healthy
+    env_file:
+      - ./env/backend.env
+    ports:
+      - "8080:8080"
+
+  green-frontend:
+    build: ./frontend
+    container_name: travelmanager-frontend
+    ports:
+      - "80:80"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - green-backend
+
+  green-db:
+    build: ./db
+    container_name: travelmanager-db
+    env_file:
+      - ./env/mysql.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  mysql_data:
