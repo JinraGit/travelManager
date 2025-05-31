@@ -1,5 +1,6 @@
 package bbw.tm.backend.trip;
 
+import bbw.tm.backend.enums.TripType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -9,10 +10,7 @@ import java.time.LocalDate;
 public class TripRequestDTO {
 
     @NotNull
-    private String user;
-
-    @NotNull
-    private String tripType;
+    private TripType tripType;
 
     @NotNull
     private LocalDate startDate;

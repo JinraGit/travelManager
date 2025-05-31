@@ -110,7 +110,11 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.GET, "/persons/*/emergency-contact").authenticated()
 
                         // authentifizierte Endpunkte
-                        .requestMatchers("/schools/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/trips/**").authenticated()
+
 
                         .requestMatchers(appConfiguration.getAllowedUrls()).permitAll()
                         .requestMatchers(HttpMethod.POST, appConfiguration.getAuthUrls()).permitAll()
@@ -119,8 +123,6 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .requestMatchers("/api/admin/**").hasRole(Roles.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/accounts/*/role").hasRole(Roles.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/accounts/admin/create").hasRole(Roles.ADMIN.name())
-
-                        // für Admin und Coach spezifische Endpunkte
                         .requestMatchers(HttpMethod.DELETE, "/accounts/*").hasAnyRole(Roles.ADMIN.name())
 
                         // Alle anderen Anfragen erlauben

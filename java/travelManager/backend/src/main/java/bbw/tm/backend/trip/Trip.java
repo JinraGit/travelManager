@@ -1,6 +1,7 @@
 package bbw.tm.backend.trip;
 
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.enums.TripType;
 import bbw.tm.backend.hotel.Hotel;
 import bbw.tm.backend.meeting.Meeting;
 import bbw.tm.backend.transport.Transport;
@@ -23,8 +24,10 @@ public class Trip {
     @Column(nullable = false)
     private String user;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String tripType;
+    private TripType tripType;
+
 
     @Column(nullable = false)
     private LocalDate startDate;

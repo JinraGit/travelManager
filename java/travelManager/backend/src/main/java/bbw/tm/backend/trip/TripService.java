@@ -67,10 +67,7 @@ public class TripService {
         Trip trip = tripRepository.findByIdAndAccountId(id, account.getId())
                 .orElseThrow(() -> createFailedValidationException("id", "Trip wurde nicht gefunden"));
 
-        // Partielle Aktualisierung
-        if (requestDTO.getUser() != null) {
-            trip.setUser(requestDTO.getUser());
-        }
+
         if (requestDTO.getTripType() != null) {
             trip.setTripType(requestDTO.getTripType());
         }
