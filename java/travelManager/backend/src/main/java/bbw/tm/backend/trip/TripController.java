@@ -2,13 +2,10 @@ package bbw.tm.backend.trip;
 
 import bbw.tm.backend.account.Account;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,29 +19,34 @@ public class TripController {
 
     private final TripService tripService;
 
-    @Operation(summary = "Erstellt einen neuen Trip für den aktuellen Account.")
+    @Operation(summary = "Erstellt einen neuen Trip für den Account.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Trip erfolgreich erstellt",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = TripResponseDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Ungültiger Eingabeparameter", content = @Content)
+            @ApiResponse(responseCode = "201", description = "Trip erfolgreich erstellt."),
+            @ApiResponse(responseCode = "400", description = "Ungültige Eingabeparameter.")
     })
     @PostMapping
     public ResponseEntity<TripResponseDTO> createTrip(
             @Valid @RequestBody TripRequestDTO requestDTO,
             @AuthenticationPrincipal Account account) {
         TripResponseDTO createdTrip = tripService.createTrip(requestDTO, account);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTrip);
+        return ResponseEntity.status(201).body(createdTrip);
     }
 
-    @Operation(summary = "Liefert eine Liste aller Trips des aktuellen Accounts.")
+    @Operation(summary = "Liefert alle Trips des Accounts.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trips erfolgreich abgerufen.")
+    })
     @GetMapping
     public ResponseEntity<List<TripResponseDTO>> getAllTrips(@AuthenticationPrincipal Account account) {
         List<TripResponseDTO> trips = tripService.getAllTripsForAccount(account);
         return ResponseEntity.ok(trips);
     }
 
-    @Operation(summary = "Liefert einen Trip anhand der ID, wenn er zum aktuellen Account gehört.")
+    @Operation(summary = "Liefert einen bestimmten Trip des Accounts anhand der ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trip erfolgreich abgerufen."),
+            @ApiResponse(responseCode = "404", description = "Trip wurde nicht gefunden.")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<TripResponseDTO> getTripById(
             @PathVariable Integer id,

@@ -98,18 +98,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // Öffentliche Endpunkte
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/subjects/**").permitAll()
-                        .requestMatchers("/grades/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/schools/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/teams/**").permitAll()
-
-                        // Notfallkontakt-Endpunkte für authentifizierte Benutzer
-                        .requestMatchers(HttpMethod.PATCH, "/persons/*/emergency-contact").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/persons/*/emergency-contact").authenticated()
-
-                        // authentifizierte Endpunkte
+                        // Trips-Endpunkte: Zugriff nur für authentifizierte Benutzer
                         .requestMatchers(HttpMethod.GET, "/trips/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/trips/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/trips/**").authenticated()
