@@ -42,6 +42,21 @@ public class TripService {
     }
 
     /**
+     * Holt einen Trip anhand der ID und authentifiziertem Account direkt als Entity.
+     * Diese Methode wird für andere Services benötigt, z. B. für Transport.
+     *
+     * @param id      Die ID des Trips.
+     * @param account Der Account, dessen Trips überprüft werden.
+     * @return Der gesuchte Trip als Entity.
+     */
+    public Trip getTripByIdAndAccount(Integer id, Account account) {
+        return tripRepository.findByIdAndAccountId(id, account.getId())
+                .orElseThrow(() -> new FailedValidationException(
+                        Map.of("id", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
+                ));
+    }
+
+    /**
      * Erstellt einen neuen Trip für einen bestimmten Account.
      *
      * @param requestDTO Die Daten des neuen Trips.
