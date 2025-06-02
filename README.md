@@ -15,6 +15,13 @@ Die Anwendung wurde mit **React** (Frontend) und **Spring Boot** (Backend) umges
 
 ---
 
+## 📦 Entwicklungsstand
+
+> Der aktuelle Entwicklungsstand befindet sich im **[`develop`](https://github.com/JinraGit/travelManager/tree/develop)**-Branch.  
+> Der `main`-Branch enthält stabile Releases.
+
+---
+
 ## 📚 Dokumentation & Planung
 
 Detaillierte Dokumentation, Use Cases, die IPERKA-Planung, User Stories, Wochenjournale und technische Details findest du im 📘 **Projekt-Wiki**:
