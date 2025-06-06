@@ -2,17 +2,22 @@ package bbw.tm.backend.trip;
 
 import bbw.tm.backend.FailedValidationException;
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.hotel.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TripService {
 
     private final TripRepository tripRepository;
+    private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
+    private final HotelService hotelService;
 
     /**
      * Holt alle Trips des authentifizierten Accounts.
@@ -57,7 +62,8 @@ public class TripService {
     }
 
     /**
-     * Erstellt einen neuen Trip für einen bestimmten Account.
+     * Erstellt einen neuen Trip für einen bestimmten Account, einschließlich eines Hotels,
+     * falls es im Request angegeben ist.
      *
      * @param requestDTO Die Daten des neuen Trips.
      * @param account    Der Account, für den der Trip erstellt werden soll.
@@ -65,12 +71,23 @@ public class TripService {
      */
     public TripResponseDTO createTrip(TripRequestDTO requestDTO, Account account) {
         Trip trip = TripMapper.toTrip(requestDTO, account);
+
+        // Hotels erstellen oder vorhandene Hotels verwenden
+        if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
+            List<Hotel> hotels = requestDTO.getHotels().stream()
+                    .map(this::findOrCreateHotel) // Hotel finden oder erstellen
+                    .toList();
+            trip.setHotels(hotels); // Hotels dem Trip hinzufügen
+        }
+
         Trip savedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(savedTrip);
     }
 
+
+
     /**
-     * Aktualisiert einen vorhandenen Trip, wenn er zum Account gehört.
+     * Aktualisiert einen vorhandenen Trip für einen Account, einschließlich eines Hotels.
      *
      * @param id         Die ID des zu aktualisierenden Trips.
      * @param requestDTO Die neuen Daten des Trips.
@@ -94,6 +111,15 @@ public class TripService {
             trip.setEndDate(requestDTO.getEndDate());
         }
 
+        // Hotel erstellen oder vorhandenes Hotel verwenden
+        if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
+            List<Hotel> hotels = requestDTO.getHotels().stream()
+                    .map(this::findOrCreateHotel)
+                    .toList();
+            trip.setHotels(hotels); // Alle Hotels setzen
+        }
+
+
         Trip updatedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(updatedTrip);
     }
@@ -111,4 +137,24 @@ public class TripService {
                 ));
         tripRepository.delete(trip);
     }
+
+    /**
+     * Hilfsmethode, um ein Hotel zu finden oder bei Bedarf zu erstellen.
+     *
+     */
+    private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
+        // Suche nach einem bestehenden Hotel
+        Optional<Hotel> existingHotel = hotelRepository
+                .findByNameAndCheckInDate(hotelCreateDTO.name(), hotelCreateDTO.checkInDate());
+
+        if (existingHotel.isPresent()) {
+            return existingHotel.get(); // Verwende das gefundene Hotel
+        }
+
+        // Falls kein Hotel gefunden wurde, erstelle es neu
+        return hotelMapper.fromCreateDTO(hotelCreateDTO);
+    }
+
+
+
 }

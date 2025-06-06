@@ -5,6 +5,7 @@ import bbw.tm.backend.address.AddressDTO;
 import bbw.tm.backend.address.AddressCreateDTO;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class HotelMapper {
 
@@ -87,4 +88,24 @@ public class HotelMapper {
             }
         }
     }
+    public Hotel toEntity(HotelDTO hotelDTO) {
+        Hotel hotel = new Hotel();
+        hotel.setId(hotelDTO.id()); // Setze die ID, falls sie vorhanden ist
+        hotel.setName(hotelDTO.name());
+        hotel.setCheckInDate(hotelDTO.checkInDate());
+        hotel.setCheckOutDate(hotelDTO.checkOutDate());
+        hotel.setPrice(hotelDTO.price());
+
+        if (hotelDTO.address() != null) {
+            Address address = new Address();
+            address.setStreet(hotelDTO.address().street());
+            address.setHouseNumber(hotelDTO.address().houseNumber());
+            address.setCity(hotelDTO.address().city());
+            address.setZipCode(hotelDTO.address().zipCode());
+            hotel.setAddress(address);
+        }
+
+        return hotel;
+    }
+
 }

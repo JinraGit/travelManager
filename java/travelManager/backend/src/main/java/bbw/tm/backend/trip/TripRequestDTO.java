@@ -1,6 +1,8 @@
 package bbw.tm.backend.trip;
 
 import bbw.tm.backend.enums.TripType;
+import bbw.tm.backend.hotel.HotelCreateDTO;
+import bbw.tm.backend.hotel.HotelDTO;
 import bbw.tm.backend.transport.TransportRequestDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -24,4 +26,7 @@ public class TripRequestDTO {
     @Valid
     private List<TransportRequestDTO> transports;
 
+    @Valid
+    private List<HotelCreateDTO> hotels;
+    // Hotel als optionales Feld (für Erstellung/Verknüpfung)
 }

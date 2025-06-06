@@ -41,7 +41,7 @@ public class Trip extends BaseEntity {
     private List<Transport> transports = new ArrayList<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Hotel> hotels;
+    private List<Hotel> hotels = new ArrayList<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Meeting> meetings;
