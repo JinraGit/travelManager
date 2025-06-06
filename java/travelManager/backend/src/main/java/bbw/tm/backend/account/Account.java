@@ -1,6 +1,7 @@
 package bbw.tm.backend.account;
 
 import bbw.tm.backend.role.Role;
+import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -49,6 +51,10 @@ public class Account implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true) // Beziehung zu Trip
+    private List<Trip> trips;
+
 
     public boolean hasRole(String roleName) {
         if (roles == null) return false;

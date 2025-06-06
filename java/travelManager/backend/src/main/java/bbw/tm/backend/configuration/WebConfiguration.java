@@ -98,19 +98,18 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // Öffentliche Endpunkte
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/subjects/**").permitAll()
-                        .requestMatchers("/grades/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/schools/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/teams/**").permitAll()
+                        // Trips-Endpunkte: Zugriff nur für authentifizierte Benutzer
+                        .requestMatchers(HttpMethod.GET, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/trips/**").authenticated()
 
-                        // Notfallkontakt-Endpunkte für authentifizierte Benutzer
-                        .requestMatchers(HttpMethod.PATCH, "/persons/*/emergency-contact").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/persons/*/emergency-contact").authenticated()
+                        // Hotels-Endpunkte: Zugriff nur für authentifizierte Benutzer
+                        .requestMatchers(HttpMethod.GET, "/hotels/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/hotels/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/hotels/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/hotels/**").authenticated()
 
-                        // authentifizierte Endpunkte
-                        .requestMatchers("/schools/**").authenticated()
 
                         .requestMatchers(appConfiguration.getAllowedUrls()).permitAll()
                         .requestMatchers(HttpMethod.POST, appConfiguration.getAuthUrls()).permitAll()
@@ -119,8 +118,6 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .requestMatchers("/api/admin/**").hasRole(Roles.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/accounts/*/role").hasRole(Roles.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/accounts/admin/create").hasRole(Roles.ADMIN.name())
-
-                        // für Admin und Coach spezifische Endpunkte
                         .requestMatchers(HttpMethod.DELETE, "/accounts/*").hasAnyRole(Roles.ADMIN.name())
 
                         // Alle anderen Anfragen erlauben
