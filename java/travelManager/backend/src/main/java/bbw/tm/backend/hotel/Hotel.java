@@ -1,5 +1,6 @@
 package bbw.tm.backend.hotel;
 
+import bbw.tm.backend.address.Address;
 import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
@@ -17,9 +18,6 @@ public class Hotel extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
     private LocalDate checkInDate;
 
     @Column(nullable = false)
@@ -28,7 +26,18 @@ public class Hotel extends BaseEntity {
     @Column(nullable = false)
     private Double price;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
+    private Address address;
+
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
+
+    // Setter für Address-Objekt, das gleich die Bidirektionalität aufrechterhält
+    public void setAddress(Address address) {
+        this.address = address;
+        if (address != null) {
+            address.setHotel(this);
+        }
+    }
 }
