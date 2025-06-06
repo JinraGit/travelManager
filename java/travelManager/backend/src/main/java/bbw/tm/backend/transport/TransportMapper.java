@@ -9,7 +9,6 @@ public class TransportMapper {
         Transport transport = new Transport();
         transport.setType(dto.getType());
         transport.setDate(dto.getDate());
-        transport.setPrice(dto.getPrice());
         transport.setTrip(trip);
 
         // Direkt die Werte aus dem DTO auf die Entity setzen
@@ -38,7 +37,6 @@ public class TransportMapper {
         dto.setId(transport.getId());
         dto.setType(transport.getType());
         dto.setDate(transport.getDate());
-        dto.setPrice(transport.getPrice());
 
         // Stunden und Minuten in ResponseDTO schreiben
         dto.setDepartureHour(transport.getDepartureHour());

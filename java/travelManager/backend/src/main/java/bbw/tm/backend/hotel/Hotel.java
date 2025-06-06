@@ -23,9 +23,6 @@ public class Hotel extends BaseEntity {
     @Column(nullable = false)
     private LocalDate checkOutDate;
 
-    @Column(nullable = false)
-    private Double price;
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Address address;
 

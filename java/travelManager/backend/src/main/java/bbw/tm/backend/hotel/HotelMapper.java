@@ -28,8 +28,7 @@ public class HotelMapper {
             hotel.getName(),
             addressDTO,
             hotel.getCheckInDate(),
-            hotel.getCheckOutDate(),
-            hotel.getPrice()
+            hotel.getCheckOutDate()
         );
     }
 
@@ -39,7 +38,6 @@ public class HotelMapper {
         hotel.setName(hotelCreateDTO.name());
         hotel.setCheckInDate(hotelCreateDTO.checkInDate());
         hotel.setCheckOutDate(hotelCreateDTO.checkOutDate());
-        hotel.setPrice(hotelCreateDTO.price());
 
         if (hotelCreateDTO.address() != null) {
             Address address = new Address();
@@ -62,9 +60,6 @@ public class HotelMapper {
         }
         if (hotelDTO.checkOutDate() != null) {
             hotel.setCheckOutDate(hotelDTO.checkOutDate());
-        }
-        if (hotelDTO.price() != null) {
-            hotel.setPrice(hotelDTO.price());
         }
 
         if (hotelDTO.address() != null) {
@@ -94,7 +89,6 @@ public class HotelMapper {
         hotel.setName(hotelDTO.name());
         hotel.setCheckInDate(hotelDTO.checkInDate());
         hotel.setCheckOutDate(hotelDTO.checkOutDate());
-        hotel.setPrice(hotelDTO.price());
 
         if (hotelDTO.address() != null) {
             Address address = new Address();

@@ -169,7 +169,6 @@ public class TripService {
             clonedHotel.setName(original.getName());
             clonedHotel.setCheckInDate(original.getCheckInDate());
             clonedHotel.setCheckOutDate(original.getCheckOutDate());
-            clonedHotel.setPrice(original.getPrice());
             clonedHotel.setAddress(original.getAddress()); // Falls Address-Informationen mitkopiert werden sollen
 
             return clonedHotel; // Neuer Datensatz wird erstellt
