@@ -1,6 +1,7 @@
 package bbw.tm.backend.trip;
 
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.transport.TransportMapper;
 
 public class TripMapper {
 
@@ -22,7 +23,8 @@ public class TripMapper {
             trip.getUser(),
             trip.getTripType(),
             trip.getStartDate(),
-            trip.getEndDate()
+            trip.getEndDate(),
+            trip.getTransports().stream().map(TransportMapper::toResponseDTO).toList()
         );
     }
 }

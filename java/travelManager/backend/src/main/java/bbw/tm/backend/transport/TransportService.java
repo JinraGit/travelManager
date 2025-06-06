@@ -1,6 +1,5 @@
 package bbw.tm.backend.transport;
 
-import bbw.tm.backend.FailedValidationException;
 import bbw.tm.backend.account.Account;
 import bbw.tm.backend.trip.Trip;
 import bbw.tm.backend.trip.TripService;
@@ -19,6 +18,9 @@ public class TransportService {
 
     // Erstellen eines Transportmittels
     public TransportResponseDTO createTransport(Integer tripId, TransportRequestDTO requestDTO, Account account) {
+        // Überprüfung der Transportdaten
+        requestDTO.validate();
+
         Trip trip = tripService.getTripByIdAndAccount(tripId, account);
         Transport transport = TransportMapper.toTransport(requestDTO, trip);
         Transport savedTransport = transportRepository.save(transport);

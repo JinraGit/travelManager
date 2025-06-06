@@ -12,11 +12,15 @@ public class TransportMapper {
         transport.setPrice(dto.getPrice());
         transport.setDepartureTime(dto.getDepartureTime());
         transport.setArrivalTime(dto.getArrivalTime());
-        transport.setLicensePlate(dto.getLicensePlate());
-        transport.setAirline(dto.getAirline());
-        transport.setTrainNumber(dto.getTrainNumber());
-        transport.setBusNumber(dto.getBusNumber());
         transport.setTrip(trip);
+
+        // Nur relevante Felder setzen
+        switch (dto.getType()) {
+            case CAR -> transport.setLicensePlate(dto.getLicensePlate());
+            case AIRPLANE -> transport.setAirline(dto.getAirline());
+            case TRAIN -> transport.setTrainNumber(dto.getTrainNumber());
+            case BUS -> transport.setBusNumber(dto.getBusNumber());
+        }
         return transport;
     }
 
