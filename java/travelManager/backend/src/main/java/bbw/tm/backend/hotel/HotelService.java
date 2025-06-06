@@ -13,20 +13,15 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
 
-    public HotelDTO saveHotel(HotelDTO hotelDTO) {
-        Hotel hotel = hotelMapper.fromDTO(hotelDTO);
+    public HotelDTO saveHotel(HotelCreateDTO hotelCreateDTO) {
+        Hotel hotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
         Hotel savedHotel = hotelRepository.save(hotel);
         return hotelMapper.toDTO(savedHotel);
     }
 
-    public HotelDTO updateHotel(Integer id, HotelDTO hotelDTO) {
+    public HotelDTO updateHotelPartially(Integer id, HotelDTO hotelDTO) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
-        hotel.setName(hotelDTO.name());
-        hotel.setCheckInDate(hotelDTO.checkInDate());
-        hotel.setCheckOutDate(hotelDTO.checkOutDate());
-        hotel.setPrice(hotelDTO.price());
-        hotel.setAddress(hotelMapper.fromDTO(hotelDTO).getAddress());
-        
+        hotelMapper.updateFromDTO(hotel, hotelDTO);
         Hotel updatedHotel = hotelRepository.save(hotel);
         return hotelMapper.toDTO(updatedHotel);
     }

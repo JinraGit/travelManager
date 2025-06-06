@@ -30,7 +30,7 @@ public class Hotel extends BaseEntity {
     private Address address;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id", nullable = false)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 
     // Setter für Address-Objekt, das gleich die Bidirektionalität aufrechterhält
