@@ -2,6 +2,8 @@ package bbw.tm.backend.transport;
 
 import bbw.tm.backend.enums.TransportType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransportRequestDTO {
 
     @NotNull
@@ -38,15 +41,30 @@ public class TransportRequestDTO {
     @Schema(description = "Minute of arrival (00-59)", example = "04")
     private String arrivalMinute;
 
+    @JsonProperty("licensePlate")
+    public String getLicensePlate() {
+        return type == TransportType.CAR ? licensePlate : null;
+    }
+    private String licensePlate;
 
+    @JsonProperty("airline")
+    public String getAirline() {
+        return type == TransportType.AIRPLANE ? airline : null;
+    }
+    private String airline;
 
-    private String licensePlate; // Kennzeichen (für Auto)
+    @JsonProperty("trainNumber")
+    public String getTrainNumber() {
+        return type == TransportType.TRAIN ? trainNumber : null;
+    }
+    private String trainNumber;
 
-    private String airline; // Fluggesellschaft (für Flugzeug)
+    @JsonProperty("busNumber")
+    public String getBusNumber() {
+        return type == TransportType.BUS ? busNumber : null;
+    }
+    private String busNumber;
 
-    private String trainNumber; // Zugnummer (für Zug)
-
-    private String busNumber; // Busnummer (für Bus)
 
     public void validate() {
         switch (type) {
