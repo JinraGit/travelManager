@@ -1,5 +1,6 @@
 package bbw.tm.backend.transport;
 
+import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.enums.TransportType;
 import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
@@ -7,16 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 
 @Getter
 @Setter
 @Entity
-public class Transport {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Transport extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

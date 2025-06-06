@@ -1,5 +1,6 @@
 package bbw.tm.backend.meeting;
 
+import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,11 +12,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
-public class Meeting {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Meeting extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate date;

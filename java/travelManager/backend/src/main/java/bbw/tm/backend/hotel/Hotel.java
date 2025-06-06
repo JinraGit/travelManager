@@ -1,5 +1,6 @@
 package bbw.tm.backend.hotel;
 
+import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,11 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-public class Hotel {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Hotel extends BaseEntity {
 
     @Column(nullable = false)
     private String name;

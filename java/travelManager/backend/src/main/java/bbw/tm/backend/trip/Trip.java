@@ -1,6 +1,7 @@
 package bbw.tm.backend.trip;
 
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.enums.TripType;
 import bbw.tm.backend.hotel.Hotel;
 import bbw.tm.backend.meeting.Meeting;
@@ -16,11 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Trip {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Trip extends BaseEntity {
 
     @Column(nullable = false)
     private String user;
