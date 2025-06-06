@@ -1,7 +1,10 @@
 package bbw.tm.backend.transport;
 
 import bbw.tm.backend.enums.TransportType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -19,9 +22,23 @@ public class TransportRequestDTO {
     @NotNull
     private Double price; // Preis
 
-    private LocalTime departureTime; // Abreisezeit (optional)
+    @Pattern(regexp = "([01][0-9]|2[0-3])", message = "Hour must be between 00 and 23.")
+    @Schema(description = "Hour of departure (00-23)", example = "22")
+    private String departureHour;
 
-    private LocalTime arrivalTime; // Ankunftszeit (optional)
+    @Pattern(regexp = "[0-5][0-9]", message = "Minute must be between 00 and 59.")
+    @Schema(description = "Minute of departure (00-59)", example = "41")
+    private String departureMinute;
+
+    @Pattern(regexp = "([01][0-9]|2[0-3])", message = "Hour must be between 00 and 23.")
+    @Schema(description = "Hour of arrival (00-23)", example = "14")
+    private String arrivalHour;
+
+    @Pattern(regexp = "[0-5][0-9]", message = "Minute must be between 00 and 59.")
+    @Schema(description = "Minute of arrival (00-59)", example = "04")
+    private String arrivalMinute;
+
+
 
     private String licensePlate; // Kennzeichen (für Auto)
 
@@ -55,5 +72,32 @@ public class TransportRequestDTO {
             }
             default -> throw new IllegalArgumentException("Invalid transport type specified.");
         }
+        if (date == null) {
+            throw new IllegalArgumentException("Date is required.");
+        }
+        if (price == null) {
+            throw new IllegalArgumentException("Price is required.");
+        }
+
+
     }
+
+    // Entferne oder ignoriere Getter für LocalTime
+    @JsonIgnore
+    public LocalTime getDepartureTimeAsLocalTime() {
+        if (departureHour != null && departureMinute != null) {
+            return LocalTime.of(Integer.parseInt(departureHour), Integer.parseInt(departureMinute));
+        }
+        return null;
+    }
+
+    @JsonIgnore
+    public LocalTime getArrivalTimeAsLocalTime() {
+        if (arrivalHour != null && arrivalMinute != null) {
+            return LocalTime.of(Integer.parseInt(arrivalHour), Integer.parseInt(arrivalMinute));
+        }
+        return null;
+    }
+
+
 }

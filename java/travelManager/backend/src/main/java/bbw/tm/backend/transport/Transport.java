@@ -27,12 +27,18 @@ public class Transport {
 
     @Column(nullable = false)
     private Double price; // Preis des Transportmittels
-    
-    @Column
-    private LocalTime departureTime; // Abreisezeit (optional)
 
-    @Column
-    private LocalTime arrivalTime; // Ankunftszeit (optional)
+    @Column(length = 2) // Max. 2 Zeichen für Stunden
+    private String departureHour; // Abreise-Stunde
+
+    @Column(length = 2) // Max. 2 Zeichen für Minuten
+    private String departureMinute; // Abreise-Minute
+
+    @Column(length = 2) // Max. 2 Zeichen für Stunden
+    private String arrivalHour; // Ankunfts-Stunde
+
+    @Column(length = 2) // Max. 2 Zeichen für Minuten
+    private String arrivalMinute; // Ankunfts-Minute
 
     // Spezifische Felder für Transportmittel:
     @Column
