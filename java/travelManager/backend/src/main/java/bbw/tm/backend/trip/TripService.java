@@ -77,12 +77,20 @@ public class TripService {
             List<Hotel> hotels = requestDTO.getHotels().stream()
                     .map(this::findOrCreateHotel) // Hotel finden oder erstellen
                     .toList();
+
+            // Sicherstellen, dass der Trip im Hotel gesetzt wird (bidirektionale Beziehung)
+            for (Hotel hotel : hotels) {
+                hotel.setTrip(trip); // Verknüpfe Hotel mit Trip
+            }
+
             trip.setHotels(hotels); // Hotels dem Trip hinzufügen
         }
 
+        // Trip speichern (inklusive verknüpfter Hotels)
         Trip savedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(savedTrip);
     }
+
 
 
 
@@ -111,13 +119,17 @@ public class TripService {
             trip.setEndDate(requestDTO.getEndDate());
         }
 
-        // Hotel erstellen oder vorhandenes Hotel verwenden
+        // Hotels aktualisieren oder hinzufügen
         if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
             List<Hotel> hotels = requestDTO.getHotels().stream()
                     .map(this::findOrCreateHotel)
                     .toList();
-            trip.setHotels(hotels); // Alle Hotels setzen
+            for (Hotel hotel : hotels) {
+                hotel.setTrip(trip); // Trip im Hotel setzen
+            }
+            trip.setHotels(hotels);
         }
+
 
 
         Trip updatedTrip = tripRepository.save(trip);
@@ -143,18 +155,27 @@ public class TripService {
      *
      */
     private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
-        // Suche nach einem bestehenden Hotel
-        Optional<Hotel> existingHotel = hotelRepository
-                .findByNameAndCheckInDate(hotelCreateDTO.name(), hotelCreateDTO.checkInDate());
+        // Prüfe, ob das Hotel bereits existiert
+        Optional<Hotel> existingHotel = hotelRepository.findByNameAndCheckInDate(
+                hotelCreateDTO.name(),
+                hotelCreateDTO.checkInDate()
+        );
 
         if (existingHotel.isPresent()) {
-            return existingHotel.get(); // Verwende das gefundene Hotel
+            // Clonen, um Konflikte in Trip-Zuordnungen zu verhindern
+            Hotel original = existingHotel.get();
+            Hotel clonedHotel = new Hotel();
+
+            clonedHotel.setName(original.getName());
+            clonedHotel.setCheckInDate(original.getCheckInDate());
+            clonedHotel.setCheckOutDate(original.getCheckOutDate());
+            clonedHotel.setPrice(original.getPrice());
+            clonedHotel.setAddress(original.getAddress()); // Falls Address-Informationen mitkopiert werden sollen
+
+            return clonedHotel; // Neuer Datensatz wird erstellt
         }
 
-        // Falls kein Hotel gefunden wurde, erstelle es neu
+        // Neues Hotel erstellen, wenn keins gefunden wurde
         return hotelMapper.fromCreateDTO(hotelCreateDTO);
     }
-
-
-
 }

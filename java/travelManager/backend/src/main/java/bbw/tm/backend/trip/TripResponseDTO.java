@@ -1,6 +1,7 @@
 package bbw.tm.backend.trip;
 
 import bbw.tm.backend.enums.TripType;
+import bbw.tm.backend.hotel.HotelDTO;
 import bbw.tm.backend.transport.TransportResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +21,8 @@ public class TripResponseDTO {
     
     // Transporte hinzufügen
     private List<TransportResponseDTO> transports;
+
+    // Hotels hinzufügen
+    private List<HotelDTO> hotels;
+
 }
