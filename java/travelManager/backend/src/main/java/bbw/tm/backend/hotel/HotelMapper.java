@@ -24,11 +24,12 @@ public class HotelMapper {
         }
 
         return new HotelDTO(
-            hotel.getId(),
-            hotel.getName(),
-            addressDTO,
-            hotel.getCheckInDate(),
-            hotel.getCheckOutDate()
+                hotel.getId(),
+                hotel.getName(),
+                addressDTO,
+                hotel.getCheckInDate(),
+                hotel.getCheckOutDate()
+
         );
     }
 

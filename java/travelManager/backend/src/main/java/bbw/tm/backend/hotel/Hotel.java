@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,9 +28,13 @@ public class Hotel extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Address address;
 
-    @ManyToOne
-    @JoinColumn(name = "trip_id")
-    private Trip trip;
+    @ManyToMany
+    @JoinTable(
+            name = "trip_hotel", // Name der Zwischentabelle
+            joinColumns = @JoinColumn(name = "hotel_id"),
+            inverseJoinColumns = @JoinColumn(name = "trip_id")
+    )
+    private List<Trip> trips = new ArrayList<>();
 
     // Setter für Address-Objekt, das gleich die Bidirektionalität aufrechterhält
     public void setAddress(Address address) {

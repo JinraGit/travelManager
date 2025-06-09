@@ -77,13 +77,15 @@ public class TripService {
             List<Hotel> hotels = requestDTO.getHotels().stream()
                     .map(this::findOrCreateHotel) // Hotel finden oder erstellen
                     .toList();
+            trip.setHotels(hotels);
+
 
             // Sicherstellen, dass der Trip im Hotel gesetzt wird (bidirektionale Beziehung)
             for (Hotel hotel : hotels) {
-                hotel.setTrip(trip); // Verknüpfe Hotel mit Trip
+                if (!hotel.getTrips().contains(trip)) {
+                    hotel.getTrips().add(trip);
+                }
             }
-
-            trip.setHotels(hotels); // Hotels dem Trip hinzufügen
         }
 
         // Trip speichern (inklusive verknüpfter Hotels)
@@ -125,7 +127,7 @@ public class TripService {
                     .map(this::findOrCreateHotel)
                     .toList();
             for (Hotel hotel : hotels) {
-                hotel.setTrip(trip); // Trip im Hotel setzen
+                hotel.getTrips().add(trip); // Trip im Hotel setzen
             }
             trip.setHotels(hotels);
         }
