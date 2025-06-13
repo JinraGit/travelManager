@@ -36,6 +36,10 @@ public class Hotel extends BaseEntity {
     )
     private List<Trip> trips = new ArrayList<>();
 
+    public Hotel() {
+        this.trips = new ArrayList<>();
+    }
+
     // Setter für Address-Objekt, das gleich die Bidirektionalität aufrechterhält
     public void setAddress(Address address) {
         this.address = address;
