@@ -28,7 +28,7 @@ public class Hotel extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Address address;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "trip_hotel", // Name der Zwischentabelle
             joinColumns = @JoinColumn(name = "hotel_id"),

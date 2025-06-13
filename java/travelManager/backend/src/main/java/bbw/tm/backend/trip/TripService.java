@@ -72,23 +72,24 @@ public class TripService {
     public TripResponseDTO createTrip(TripRequestDTO requestDTO, Account account) {
         Trip trip = TripMapper.toTrip(requestDTO, account);
 
-        // Hotels erstellen oder vorhandene Hotels verwenden
+        // Verknüpfen von Hotels
         if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
             List<Hotel> hotels = requestDTO.getHotels().stream()
-                    .map(this::findOrCreateHotel) // Hotel finden oder erstellen
+                    .map(hotelCreateDTO -> {
+                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+
+                        // Automatische Verknüpfung sicherstellen
+                        if (!hotel.getTrips().contains(trip)) {
+                            hotel.getTrips().add(trip);
+                        }
+                        return hotel;
+                    })
                     .toList();
+
             trip.setHotels(hotels);
-
-
-            // Sicherstellen, dass der Trip im Hotel gesetzt wird (bidirektionale Beziehung)
-            for (Hotel hotel : hotels) {
-                if (!hotel.getTrips().contains(trip)) {
-                    hotel.getTrips().add(trip);
-                }
-            }
         }
 
-        // Trip speichern (inklusive verknüpfter Hotels)
+        // Speichern des Trips (inkl. verknüpfter Hotels)
         Trip savedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(savedTrip);
     }
@@ -96,8 +97,9 @@ public class TripService {
 
 
 
+
     /**
-     * Aktualisiert einen vorhandenen Trip für einen Account, einschließlich eines Hotels.
+     * Aktualisiert einen vorhandenen Trip für einen Account, einschliesslich eines Hotels.
      *
      * @param id         Die ID des zu aktualisierenden Trips.
      * @param requestDTO Die neuen Daten des Trips.
@@ -121,22 +123,27 @@ public class TripService {
             trip.setEndDate(requestDTO.getEndDate());
         }
 
-        // Hotels aktualisieren oder hinzufügen
+        // Aktualisieren oder Verknüpfen von Hotels
         if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
             List<Hotel> hotels = requestDTO.getHotels().stream()
-                    .map(this::findOrCreateHotel)
+                    .map(hotelCreateDTO -> {
+                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+
+                        // Automatische Verknüpfung sicherstellen
+                        if (!hotel.getTrips().contains(trip)) {
+                            hotel.getTrips().add(trip);
+                        }
+                        return hotel;
+                    })
                     .toList();
-            for (Hotel hotel : hotels) {
-                hotel.getTrips().add(trip); // Trip im Hotel setzen
-            }
+
             trip.setHotels(hotels);
         }
-
-
 
         Trip updatedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(updatedTrip);
     }
+
 
     /**
      * Löscht einen bestimmten Trip, wenn er zum Account gehört.
@@ -164,19 +171,11 @@ public class TripService {
         );
 
         if (existingHotel.isPresent()) {
-            // Clonen, um Konflikte in Trip-Zuordnungen zu verhindern
-            Hotel original = existingHotel.get();
-            Hotel clonedHotel = new Hotel();
-
-            clonedHotel.setName(original.getName());
-            clonedHotel.setCheckInDate(original.getCheckInDate());
-            clonedHotel.setCheckOutDate(original.getCheckOutDate());
-            clonedHotel.setAddress(original.getAddress()); // Falls Address-Informationen mitkopiert werden sollen
-
-            return clonedHotel; // Neuer Datensatz wird erstellt
+            return existingHotel.get();
         }
 
         // Neues Hotel erstellen, wenn keins gefunden wurde
-        return hotelMapper.fromCreateDTO(hotelCreateDTO);
+        Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
+        return hotelRepository.save(newHotel);
     }
 }

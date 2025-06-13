@@ -40,7 +40,7 @@ public class Trip extends BaseEntity {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transport> transports = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "trips")
+    @ManyToMany(mappedBy = "trips", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Hotel> hotels = new ArrayList<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
