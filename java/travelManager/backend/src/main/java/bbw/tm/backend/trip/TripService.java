@@ -157,10 +157,19 @@ public class TripService {
      * @param account Der Account, dessen Trip gelöscht werden soll.
      */
     public void deleteTripForAccount(Integer id, Account account) {
+        // Hole den Trip und validiere ihn
         Trip trip = tripRepository.findByIdAndAccountId(id, account.getId())
                 .orElseThrow(() -> new FailedValidationException(
                         Map.of("id", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
                 ));
+
+        // Beziehungen zu Hotels entfernen
+        if (trip.getHotels() != null) {
+            trip.getHotels().forEach(hotel -> hotel.getTrips().remove(trip));
+            trip.setHotels(null); // Entfernen der Assoziation des Trips zu den Hotels
+        }
+
+        // Trip löschen
         tripRepository.delete(trip);
     }
 
@@ -168,16 +177,21 @@ public class TripService {
      * Hilfsmethode, um ein Hotel zu finden oder bei Bedarf zu erstellen.
      *
      */
-    private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
-        // Findet ein bestehendes Hotel explizit anhand von Name + Adresse
-        return hotelRepository.findByNameAndAddress(
-                hotelCreateDTO.name(),
-                addressMapper.fromCreateDTO(hotelCreateDTO.address())
-        ).orElseGet(() -> {
-            // Erstellt ein neues Hotel, wenn keines existiert
-            Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
-            return hotelRepository.save(newHotel);
-        });
+private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
+    // Überprüfen, ob ein passendes Hotel bereits existiert
+    Optional<Hotel> existingHotelOpt = hotelRepository.findByNameAndAddress(
+            hotelCreateDTO.name(),
+            addressMapper.fromCreateDTO(hotelCreateDTO.address())
+    );
+
+    if (existingHotelOpt.isPresent()) {
+        // Existierendes Hotel zurückgeben
+        return existingHotelOpt.get();
+    } else {
+        // Neues Hotel erstellen und speichern
+        Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
+        return hotelRepository.save(newHotel);
     }
+}
 
 }
