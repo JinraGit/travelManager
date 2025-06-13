@@ -2,9 +2,8 @@ package bbw.tm.backend.trip;
 
 import bbw.tm.backend.account.Account;
 import bbw.tm.backend.hotel.HotelMapper;
-import bbw.tm.backend.transport.Transport;
 import bbw.tm.backend.transport.TransportMapper;
-import bbw.tm.backend.transport.TransportRequestDTO;
+
 
 import java.util.stream.Collectors;
 

@@ -49,6 +49,21 @@ public class TripService {
                 ));
     }
 
+
+    /**
+     * Holt einen bestimmten Trip anhand der ID
+     *
+     * @param id Die ID des Trips.
+     * @return Der gesuchte Trip als ResponseDTO.
+     */
+    public Trip getTripById(Integer id) {
+        return tripRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trip mit ID " + id + " nicht gefunden."));
+    }
+
+
+
+
     /**
      * Holt einen Trip anhand der ID und authentifiziertem Account direkt als Entity.
      * Diese Methode wird für andere Services benötigt, z. B. für Transport.
@@ -96,9 +111,6 @@ public class TripService {
         Trip savedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(savedTrip);
     }
-
-
-
 
 
     /**
