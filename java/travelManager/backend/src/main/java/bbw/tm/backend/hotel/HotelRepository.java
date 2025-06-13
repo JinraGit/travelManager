@@ -2,13 +2,17 @@ package bbw.tm.backend.hotel;
 
 import bbw.tm.backend.address.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-@Repository
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
-    // Suche über Name und Adresse
-    Optional<Hotel> findByNameAndAddress(String name, Address address);
+    @Query("SELECT h FROM Hotel h WHERE h.name = :name AND " +
+           "h.address.street = :street AND h.address.city = :city AND h.address.zipCode = :zipCode")
+    Optional<Hotel> findByNameAndAddress(@Param("name") String name,
+                                         @Param("street") String street,
+                                         @Param("city") String city,
+                                         @Param("zipCode") String zipCode);
 }

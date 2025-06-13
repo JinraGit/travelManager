@@ -2,6 +2,7 @@ package bbw.tm.backend.trip;
 
 import bbw.tm.backend.FailedValidationException;
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.address.Address;
 import bbw.tm.backend.address.AddressMapper;
 import bbw.tm.backend.hotel.*;
 import lombok.RequiredArgsConstructor;
@@ -178,20 +179,23 @@ public class TripService {
      *
      */
 private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
+    Address address = addressMapper.fromCreateDTO(hotelCreateDTO.address());
+
     // Überprüfen, ob ein passendes Hotel bereits existiert
-    Optional<Hotel> existingHotelOpt = hotelRepository.findByNameAndAddress(
+    Optional<Hotel> existingHotel = hotelRepository.findByNameAndAddress(
             hotelCreateDTO.name(),
-            addressMapper.fromCreateDTO(hotelCreateDTO.address())
+            address.getStreet(),
+            address.getCity(),
+            address.getZipCode()
+
     );
 
-    if (existingHotelOpt.isPresent()) {
-        // Existierendes Hotel zurückgeben
-        return existingHotelOpt.get();
-    } else {
-        // Neues Hotel erstellen und speichern
-        Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
-        return hotelRepository.save(newHotel);
+    if (existingHotel.isPresent()) {
+        // Rückgabe des bestehenden Hotels
+        return existingHotel.get();
     }
-}
-
+    // Wenn kein Hotel existiert, erstelle ein neues
+    Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
+    return hotelRepository.save(newHotel);
+    }
 }
