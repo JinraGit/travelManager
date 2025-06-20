@@ -61,7 +61,7 @@ export default function Sidebar() {
                         <>
                             <Link to="/trips/create" className={`${styles.navLink} ${isActive("/trips/create")}`}>
                                 <img src="/assets/icons/newTrip.png" alt="Neuen Trip erstellen" className={styles.icon} />
-                                Neuen Trip erstellen
+                                Trip eintragen
                             </Link>
                             <Link to="/trips/manage" className={`${styles.navLink} ${isActive("/trips/manage")}`}>
                                 <img src="/assets/icons/editTrip.png" alt="Trip bearbeiten" className={styles.icon} />
@@ -69,7 +69,19 @@ export default function Sidebar() {
                             </Link>
                             <Link to="/trips/all" className={`${styles.navLink} ${isActive("/trips/all")}`}>
                                 <img src="/assets/icons/allTrips.png" alt="Alle Trips anzeigen" className={styles.icon} />
-                                Alle Trips anzeigen
+                                Trips anzeigen
+                            </Link>
+                            <Link to="/meetings/create" className={`${styles.navLink} ${isActive("/meetings/create")}`}>
+                                <img src="/assets/icons/meetingCreate.png" alt="Neues Meeting erstellen" className={styles.icon} />
+                                Meeting eintragen
+                            </Link>
+                            <Link to="/meetings/manage" className={`${styles.navLink} ${isActive("/meetings/manage")}`}>
+                                <img src="/assets/icons/meetingEdit.png" alt="Trip bearbeiten" className={styles.icon} />
+                                Meetings verwalten
+                            </Link>
+                            <Link to="/meetings/all" className={`${styles.navLink} ${isActive("/meetings/all")}`}>
+                                <img src="/assets/icons/meeting.png" alt="Alle Meetings anzeigen" className={styles.icon} />
+                                Meetings anzeigen
                             </Link>
                         </>
                     )}
