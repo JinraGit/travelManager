@@ -18,7 +18,7 @@ export default function WelcomeRoute() {
                     style={{maxWidth: "180px"}}
                     className="mb-4"
                 />
-                <h1 className="text-primary">Willkommen zurück, {username}!</h1>
+                <h1 className="text-info-emphasis">Willkommen zurück, {username}!</h1>
                 <p className="text-muted fs-5 mt-3">
                     Schön, dass du wieder da bist. Nutze das Menü links, um auf deine Funktionen zuzugreifen.
                 </p>
