@@ -34,8 +34,8 @@ export default function Sidebar() {
             <div className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
                 {/* Header */}
                 <div className={styles.header}>
-                    <img src="/assets/tm_logo.png" alt="LEO Logo" className={styles.logo} />
-                    <h4 className={styles.title}>L.E.O</h4>
+                    <img src="/assets/tm_logo.png" alt="TravelManager Logo" className={styles.logo} />
+                    <h4 className={styles.title}>Travel Manager</h4>
                 </div>
 
                 {/* Navigation */}

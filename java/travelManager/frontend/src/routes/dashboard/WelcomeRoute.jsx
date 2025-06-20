@@ -14,11 +14,11 @@ export default function WelcomeRoute() {
             <div className="p-4 border rounded bg-light shadow-sm">
                 <img
                     src="/assets/tm_logo.png"
-                    alt="LEO Logo"
+                    alt="Travel Manager logo Logo"
                     style={{maxWidth: "180px"}}
                     className="mb-4"
                 />
-                <h1 className="text-success">Willkommen zurück, {username}!</h1>
+                <h1 className="text-primary">Willkommen zurück, {username}!</h1>
                 <p className="text-muted fs-5 mt-3">
                     Schön, dass du wieder da bist. Nutze das Menü links, um auf deine Funktionen zuzugreifen.
                 </p>
