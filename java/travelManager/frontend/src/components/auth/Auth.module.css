@@ -3,11 +3,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(140deg, #ffffff, #C1E1C1);
+    background: linear-gradient(140deg, #ffffff, #A6E1FA);
 }
 
 .card {
-    background-color: #C1E1C1;
+    background-color: #A6E1FA;
     border: none;
     border-radius: 12px;
     max-width: 400px;
@@ -24,6 +24,6 @@
     text-align: center;
     font-weight: bold;
     font-size: 1.8rem;
-    color: #2e4e2e;
+    color: #123c6a;
     margin-bottom: 1rem;
 }
