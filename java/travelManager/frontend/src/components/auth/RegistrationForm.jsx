@@ -85,13 +85,13 @@ export default function AuthForm() {
                         {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100 mb-2">Anmelden</button>
+                    <button type="submit" className="btn btn-secondary w-100 mb-2">Anmelden</button>
                 </form>
 
 
                 <p className="text-center mt-3">
                     Hast du bereits ein account?{" "}
-                    <a href="/accounts/signin" className="text-decoration-none">
+                    <a href="/accounts/signin" className="text-info text-decoration-none">
                         Hier anmelden
                     </a>
                 </p>
