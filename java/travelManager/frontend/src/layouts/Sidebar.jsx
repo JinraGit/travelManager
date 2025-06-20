@@ -20,7 +20,6 @@ export default function Sidebar() {
 
     const isActive = (path) => (location.pathname === path ? styles.active : "");
 
-    // const dashboardPath = isAdmin ? "/dashboard/admin" : isUser ? "/dashboard/user" : "/";
 
     const roleLabel = isAdmin ? "Admin" : isUser ? "Benutzer" : "Gast";
 
@@ -41,12 +40,6 @@ export default function Sidebar() {
 
                 {/* Navigation */}
                 <nav className={styles.nav}>
-                    {/* Dashboard Link */}
-                    {/*<a href={dashboardPath} className={`${styles.navLink} ${isActive(dashboardPath)}`}>*/}
-                    {/*    <img src="/assets/icons/home.png" alt="Dashboard Icon" className={styles.icon} />*/}
-                    {/*    Dashboard*/}
-                    {/*</a>*/}
-
                     <hr className={styles.separator} />
 
                     {/* Admin-only Links */}
@@ -71,10 +64,18 @@ export default function Sidebar() {
                     {/* User-only Links */}
                     {isUser && (
                         <>
-                            {/*<a href="/user/profile" className={`${styles.navLink} ${isActive("/user/profile")}`}>*/}
-                            {/*    <img src="/assets/icons/user.png" alt="Benutzerprofil Icon" className={styles.icon} />*/}
-                            {/*    Mein Profil*/}
-                            {/*</a>*/}
+                            <a href="/trips/create" className={`${styles.navLink} ${isActive("/trips/create")}`}>
+                                <img src="/assets/icons/newTrip.png" alt="einen Neuen Trip erstellen" className={styles.icon} />
+                                Neuen Trip erstellen
+                            </a>
+                            <a href="/trips/manage" className={`${styles.navLink} ${isActive("/trips/manage")}`}>
+                                <img src="/assets/icons/editTrip.png" alt="einen Trip bearbeiten" className={styles.icon} />
+                                Trips verwalten
+                            </a>
+                            <a href="/trips/all" className={`${styles.navLink} ${isActive("/trips/all")}`}>
+                                <img src="/assets/icons/allTrips.png" alt="alle Trips anzeigen" className={styles.icon} />
+                                Alle Trips anzeigen
+                            </a>
                         </>
                     )}
                 </nav>
