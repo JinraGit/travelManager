@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
 
-    List<Meeting> findAllByTripId(Integer tripId);
+    // Gibt alle Meetings zurück, die zu einem Trip und einer Account-ID gehören
+    List<Meeting> findAllByTripIdAndTripAccountId(Integer tripId, Integer accountId);
 
+    // Prüft, ob ein Meeting mit dieser Trip-ID und Account-ID existiert
+    boolean existsByIdAndTripAccountId(Integer meetingId, Integer accountId);
 }
