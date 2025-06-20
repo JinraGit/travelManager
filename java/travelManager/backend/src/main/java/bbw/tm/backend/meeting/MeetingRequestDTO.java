@@ -1,14 +1,15 @@
 package bbw.tm.backend.meeting;
 
-import bbw.tm.backend.address.AddressCreateDTO;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import lombok.Data;
 
-public record MeetingRequestDTO(
-    String name,
-    LocalDate date,
-    String startMeeting,
-    String endMeeting,
-    AddressCreateDTO location, // Location als AddressCreateDTO
-    String notes
-) {}
+import java.time.LocalDate;
+
+@Data
+public class MeetingRequestDTO {
+    private String name;
+    private LocalDate date;
+    private String startMeeting;
+    private String endMeeting;
+    private String notes;
+    private Integer tripId;
+}

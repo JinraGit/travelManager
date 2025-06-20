@@ -30,11 +30,6 @@ public class Meeting extends BaseEntity {
     @Column
     private String notes;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
-    private Address location;
-
-
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;

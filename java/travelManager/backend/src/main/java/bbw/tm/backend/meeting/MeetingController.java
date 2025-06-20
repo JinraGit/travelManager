@@ -1,42 +1,39 @@
 package bbw.tm.backend.meeting;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/trips/{tripId}/meetings") // Meetings immer in Verbindung mit einem Trip
+@RequestMapping("/meetings")
 @RequiredArgsConstructor
 public class MeetingController {
 
     private final MeetingService meetingService;
 
-    // Hole alle Meetings zu einem Trip
-    @GetMapping
-    public List<MeetingResponseDTO> getAllMeetingsForTrip(@PathVariable Integer tripId) {
-        return meetingService.getAllMeetingsForTrip(tripId);
+    @GetMapping("/list/{tripId}")
+    public ResponseEntity<List<MeetingResponseDTO>> getMeetings(@PathVariable Integer tripId, @RequestParam Integer accountId) {
+        List<MeetingResponseDTO> meetings = meetingService.getMeetings(tripId, accountId);
+        return ResponseEntity.ok(meetings);
     }
 
-    // Erstelle ein neues Meeting
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public MeetingResponseDTO createMeeting(@PathVariable Integer tripId, @RequestBody MeetingRequestDTO requestDTO) {
-        return meetingService.createMeeting(requestDTO, tripId);
+    @PostMapping("/create")
+    public ResponseEntity<MeetingResponseDTO> createMeeting(@RequestParam Integer accountId, @RequestBody MeetingRequestDTO dto) {
+        MeetingResponseDTO createdMeeting = meetingService.createMeeting(dto, accountId);
+        return ResponseEntity.ok(createdMeeting);
     }
 
-    // Aktualisiere ein Meeting
-    @PutMapping("/{meetingId}")
-    public MeetingResponseDTO updateMeeting(@PathVariable Integer meetingId,
-                                            @RequestBody MeetingRequestDTO requestDTO) {
-        return meetingService.updateMeeting(meetingId, requestDTO);
+    @PutMapping("/edit/{meetingId}")
+    public ResponseEntity<MeetingResponseDTO> updateMeeting(@PathVariable Integer meetingId, @RequestParam Integer accountId, @RequestBody MeetingRequestDTO dto) {
+        MeetingResponseDTO updatedMeeting = meetingService.updateMeeting(meetingId, dto, accountId);
+        return ResponseEntity.ok(updatedMeeting);
     }
 
-    // Lösche ein Meeting
-    @DeleteMapping("/{meetingId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMeeting(@PathVariable Integer meetingId) {
+    @DeleteMapping("/delete/{meetingId}")
+    public ResponseEntity<Void> deleteMeeting(@PathVariable Integer meetingId) {
         meetingService.deleteMeeting(meetingId);
+        return ResponseEntity.noContent().build();
     }
 }

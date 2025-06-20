@@ -1,15 +1,15 @@
 package bbw.tm.backend.meeting;
 
-import bbw.tm.backend.address.Address;
-import bbw.tm.backend.address.AddressCreateDTO;
-import bbw.tm.backend.address.AddressMapper;
-import bbw.tm.backend.address.AddressRepository;
+import bbw.tm.backend.FailedValidationException;
+import bbw.tm.backend.account.Account;
 import bbw.tm.backend.trip.Trip;
-import bbw.tm.backend.trip.TripService;
+import bbw.tm.backend.trip.TripRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,79 +17,76 @@ import java.util.stream.Collectors;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
-    private final TripService tripService;
-    private final AddressMapper addressMapper;
+    private final TripRepository tripRepository;
     private final MeetingMapper meetingMapper;
-    private final AddressRepository addressRepository;
 
+    public List<MeetingResponseDTO> getMeetings(Integer tripId, Integer accountId) {
+        // Validierung des Trips anhand der Account-ID
+        Trip trip = getTripByIdAndAccount(tripId, accountId);
 
-    // Hole alle Meetings zu einem bestimmten Trip
-    public List<MeetingResponseDTO> getAllMeetingsForTrip(Integer tripId) {
-        return meetingRepository.findAllByTripId(tripId).stream()
-                .map(meetingMapper::toResponseDTO)
+        return meetingRepository.findAllByTripIdAndTripAccountId(trip.getId(), accountId).stream()
+                .map(meetingMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    // Erstelle ein neues Meeting
-    public MeetingResponseDTO createMeeting(MeetingRequestDTO requestDTO, Integer tripId) {
-        // Hole den Trip (Validierung über TripService)
-        Trip trip = tripService.getTripById(tripId);
+    @Transactional
+    public MeetingResponseDTO createMeeting(MeetingRequestDTO dto, Integer accountId) {
+        // Validierung des Trips anhand der Account-ID
+        Trip trip = getTripByIdAndAccount(dto.getTripId(), accountId);
 
-        Address location = findOrCreateAddress(requestDTO.location());
+        Meeting meeting = meetingMapper.toEntity(dto);
+        meeting.setTrip(trip); // Verknüpfen mit dem Trip
 
-        // Baue das Meeting aus den DTOs
-        Meeting meeting = new Meeting();
-        meeting.setName(requestDTO.name());
-        meeting.setDate(requestDTO.date());
-        meeting.setStartMeeting(requestDTO.startMeeting());
-        meeting.setEndMeeting(requestDTO.endMeeting());
-        meeting.setNotes(requestDTO.notes());
-        meeting.setLocation(location);
-        meeting.setTrip(trip);
-
-        // Speichere in der Datenbank und gebe die Response zurück
-        return meetingMapper.toResponseDTO(meetingRepository.save(meeting));
+        return meetingMapper.toDto(meetingRepository.save(meeting));
     }
 
-    // Aktualisiere ein vorhandenes Meeting
-    public MeetingResponseDTO updateMeeting(Integer meetingId, MeetingRequestDTO requestDTO) {
+    /**
+     * Aktualisiert ein bestehendes Meeting.
+     *
+     * @param meetingId ID des Meetings.
+     * @param dto       Die neuen Meeting-Daten.
+     * @return Das aktualisierte Meeting als Response-DTO.
+     */
+    @Transactional
+    public MeetingResponseDTO updateMeeting(Integer meetingId, MeetingRequestDTO dto, Integer accountId) {
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("Meeting nicht gefunden"));
+                .orElseThrow(() -> new FailedValidationException(
+                        Map.of("id", List.of("Meeting wurde nicht gefunden"))
+                ));
 
-        Address location = findOrCreateAddress(requestDTO.location());
+        // Überprüfung: Gehört das Meeting zum Benutzer?
+        getTripByIdAndAccount(meeting.getTrip().getId(), accountId);
 
-        meeting.setName(requestDTO.name());
-        meeting.setDate(requestDTO.date());
-        meeting.setStartMeeting(requestDTO.startMeeting());
-        meeting.setEndMeeting(requestDTO.endMeeting());
-        meeting.setNotes(requestDTO.notes());
-        meeting.setLocation(location);
+        // Meeting-Details aktualisieren
+        meeting.setName(dto.getName());
+        meeting.setDate(dto.getDate());
+        meeting.setStartMeeting(dto.getStartMeeting());
+        meeting.setEndMeeting(dto.getEndMeeting());
+        meeting.setNotes(dto.getNotes());
 
-        return meetingMapper.toResponseDTO(meetingRepository.save(meeting));
+        return meetingMapper.toDto(meetingRepository.save(meeting));
     }
 
-    // Lösche ein Meeting
+    /**
+     * Löscht ein Meeting eines Trips, wenn der Benutzer berechtigt ist.
+     *
+     * @param meetingId ID des Meetings.
+     */
+    @Transactional
     public void deleteMeeting(Integer meetingId) {
-        if (!meetingRepository.existsById(meetingId)) {
-            throw new RuntimeException("Meeting nicht gefunden");
-        }
-        meetingRepository.deleteById(meetingId);
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new FailedValidationException(
+                        Map.of("id", List.of("Meeting wurde nicht gefunden"))
+                ));
+
+
+        meetingRepository.delete(meeting);
     }
 
-    // Methode, um eine Adresse zu finden oder zu erstellen
-    private Address findOrCreateAddress(AddressCreateDTO addressCreateDTO) {
-        // Suche nach vorhandener Adresse
-        return addressRepository
-                .findByAddress(
-                        addressCreateDTO.street(),
-                        addressCreateDTO.houseNumber(),
-                        addressCreateDTO.zipCode(),
-                        addressCreateDTO.city()
-                )
-                .orElseGet(() -> { // Wenn die Adresse nicht gefunden wird
-                    Address newAddress = addressMapper.fromCreateDTO(addressCreateDTO);
-                    return addressRepository.save(newAddress); // Neue Adresse speichern
-                });
+    private Trip getTripByIdAndAccount(Integer tripId, Integer accountId) {
+        return tripRepository.findByIdAndAccountId(tripId, accountId)
+                .orElseThrow(() -> new FailedValidationException(
+                        Map.of("tripId", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
+                ));
     }
-
 }
