@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, updateTrip } from "@/lib/trips/trips.js";
 import { defaultHotel } from "@/lib/constants/defaultHotel.js";
-import { mapTripToForm } from "@/lib/utils/formUtils.js";
+import { mapTripToForm, handleTripFormChange } from "@/lib/utils/tripFormUtils.js";
 
 export default function EditTripRoute() {
     const { id } = useParams();
@@ -23,37 +23,7 @@ export default function EditTripRoute() {
         loadTrip();
     }, [id]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        if (name.startsWith("transport.")) {
-            const key = name.split(".")[1];
-            setForm((prev) => ({
-                ...prev,
-                transport: { ...prev.transport, [key]: value }
-            }));
-        } else if (name.startsWith("hotel.address.")) {
-            const key = name.split(".")[2];
-            setForm((prev) => ({
-                ...prev,
-                hotel: {
-                    ...prev.hotel,
-                    address: {
-                        ...prev.hotel.address,
-                        [key]: value
-                    }
-                }
-            }));
-        } else if (name.startsWith("hotel.")) {
-            const key = name.split(".")[1];
-            setForm((prev) => ({
-                ...prev,
-                hotel: { ...prev.hotel, [key]: value }
-            }));
-        } else {
-            setForm((prev) => ({ ...prev, [name]: value }));
-        }
-    };
+    const handleChange = (e) => handleTripFormChange(e, setForm);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

@@ -24,3 +24,35 @@ export function mapTripToForm(trip, defaultHotel) {
         }
     };
 }
+
+export function handleTripFormChange(e, setForm) {
+    const { name, value } = e.target;
+
+    if (name.startsWith("transport.")) {
+        const key = name.split(".")[1];
+        setForm(prev => ({
+            ...prev,
+            transport: { ...prev.transport, [key]: value }
+        }));
+    } else if (name.startsWith("hotel.address.")) {
+        const key = name.split(".")[2];
+        setForm(prev => ({
+            ...prev,
+            hotel: {
+                ...prev.hotel,
+                address: {
+                    ...prev.hotel.address,
+                    [key]: value
+                }
+            }
+        }));
+    } else if (name.startsWith("hotel.")) {
+        const key = name.split(".")[1];
+        setForm(prev => ({
+            ...prev,
+            hotel: { ...prev.hotel, [key]: value }
+        }));
+    } else {
+        setForm(prev => ({ ...prev, [name]: value }));
+    }
+}
