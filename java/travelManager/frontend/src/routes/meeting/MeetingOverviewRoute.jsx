@@ -62,8 +62,6 @@ export default function MeetingOverviewRoute() {
         setSelectedTripId(e.target.value);
     };
 
-    if (error) return <div className="alert alert-danger mt-4">{error}</div>;
-
     return (
         <div className="container mt-4">
             <h2>Meetings</h2>
@@ -72,17 +70,24 @@ export default function MeetingOverviewRoute() {
                 <label className="form-label">Nach Trip filtern:</label>
                 <select
                     className="form-select"
+                    style={{ color: "black" }}
                     value={selectedTripId}
                     onChange={handleTripChange}
                 >
                     <option value="ALL">Alle Trips</option>
                     {trips.map((trip) => (
-                        <option key={trip.id} value={trip.id}>
-                            {trip.name}
+                        <option
+                            key={trip.id}
+                            value={trip.id}
+                            style={{ color: "black" }}
+                        >
+                            {trip.tripType === "BUSINESS" ? "Geschäftlich" : "Privat"} vom {formatDateEU(trip.startDate)} bis {formatDateEU(trip.endDate)}
                         </option>
                     ))}
                 </select>
             </div>
+
+            {error && <div className="alert alert-danger mt-4">{error}</div>}
 
             <table className="table table-striped mt-3">
                 <thead>
