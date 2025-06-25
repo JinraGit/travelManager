@@ -68,7 +68,7 @@ export default function CreateMeetingRoute() {
             };
 
             await createMeeting(accountId, payload);
-            navigate("/trips/" + form.tripId);
+            navigate("/meetings/all");
         } catch (err) {
             setError("Meeting konnte nicht erstellt werden: " + (err.message || ""));
         }
