@@ -71,10 +71,6 @@ export default function Sidebar() {
                                 <img src="/assets/icons/meetingCreate.png" alt="Neues Meeting erstellen" className={styles.icon} />
                                 Meeting eintragen
                             </Link>
-                            <Link to="/meetings/manage" className={`${styles.navLink} ${isActive("/meetings/manage")}`}>
-                                <img src="/assets/icons/meetingEdit.png" alt="Trip bearbeiten" className={styles.icon} />
-                                Meetings verwalten
-                            </Link>
                             <Link to="/meetings/all" className={`${styles.navLink} ${isActive("/meetings/all")}`}>
                                 <img src="/assets/icons/meeting.png" alt="Alle Meetings anzeigen" className={styles.icon} />
                                 Meetings anzeigen
