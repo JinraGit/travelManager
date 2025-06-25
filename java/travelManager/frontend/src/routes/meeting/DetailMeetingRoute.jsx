@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchMeetings, deleteMeeting } from "@/lib/meetings/meetings.js";
+import { fetchMeetingById, deleteMeeting } from "@/lib/meetings/meetings.js";
 import { useCurrentUser } from "@/lib/session.js";
 
 function formatDateEU(dateStr) {
@@ -13,31 +13,30 @@ function formatDateEU(dateStr) {
 }
 
 export default function DetailMeetingRoute() {
-    const { meetingId } = useParams();
-    const [meeting, setMeeting] = useState(null);
-    const [error, setError] = useState("");
+    const { id } = useParams();
     const user = useCurrentUser();
     const navigate = useNavigate();
 
+    const [meeting, setMeeting] = useState(null);
+    const [error, setError] = useState("");
+
     useEffect(() => {
-        async function load() {
+        async function loadMeeting() {
             try {
-                const all = await fetchMeetings(-1, user.id); // -1 lädt alle Meetings
-                const found = all.find(m => m.id === parseInt(meetingId));
-                if (!found) throw new Error("Meeting nicht gefunden.");
-                setMeeting(found);
+                const data = await fetchMeetingById(id, user.id);
+                setMeeting(data);
             } catch (err) {
-                setError("Fehler beim Laden: " + (err.message || ""));
+                setError("Fehler beim Laden des Meetings: " + (err.message || ""));
             }
         }
-        if (user?.id) load();
-    }, [user, meetingId]);
+        if (user?.id) loadMeeting();
+    }, [id, user]);
 
     const handleDelete = async () => {
         if (!confirm("Möchtest du dieses Meeting wirklich löschen?")) return;
         try {
-            await deleteMeeting(meetingId);
-            navigate("/meetings");
+            await deleteMeeting(id);
+            navigate("/meetings/all");
         } catch (err) {
             setError("Löschen fehlgeschlagen: " + (err.message || ""));
         }

@@ -19,6 +19,13 @@ public class MeetingController {
         return ResponseEntity.ok(meetings);
     }
 
+    @GetMapping("/{meetingId}")
+    public ResponseEntity<MeetingResponseDTO> getMeetingById(@PathVariable Integer meetingId, @RequestParam Integer accountId) {
+        MeetingResponseDTO meeting = meetingService.getMeetingById(meetingId, accountId);
+        return ResponseEntity.ok(meeting);
+    }
+
+
     @PostMapping("/create")
     public ResponseEntity<MeetingResponseDTO> createMeeting(@RequestParam Integer accountId, @RequestBody MeetingRequestDTO dto) {
         MeetingResponseDTO createdMeeting = meetingService.createMeeting(dto, accountId);

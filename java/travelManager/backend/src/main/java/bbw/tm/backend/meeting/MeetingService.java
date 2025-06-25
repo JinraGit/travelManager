@@ -89,4 +89,19 @@ public class MeetingService {
                         Map.of("tripId", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
                 ));
     }
+    public MeetingResponseDTO getMeetingById(Integer meetingId, Integer accountId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new FailedValidationException(
+                        Map.of("meetingId", List.of("Meeting wurde nicht gefunden"))
+                ));
+
+        // Sicherheitsprüfung: Meeting darf nur vom Besitzer eingesehen werden
+        if (!meeting.getTrip().getAccount().getId().equals(accountId)) {
+            throw new FailedValidationException(
+                    Map.of("accountId", List.of("Kein Zugriff auf dieses Meeting"))
+            );
+        }
+
+        return meetingMapper.toDto(meeting);
+    }
 }
