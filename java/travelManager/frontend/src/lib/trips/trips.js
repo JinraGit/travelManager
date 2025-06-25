@@ -1,58 +1,80 @@
-import { getJWTToken } from "@/lib/session";
-
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+import { getJWTToken } from "@/lib/session.js";
 
-async function fetchWithAuth(url, options = {}) {
+export async function fetchAllTrips() {
     const token = getJWTToken();
-    if (!token) {
-        throw new Error("Keine Authentifizierung vorhanden");
-    }
 
-    const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        ...options.headers
-    };
-
-    const response = await fetch(`${BASE_URL}${url}`, {
-        ...options,
-        headers
+    const response = await fetch(`${BASE_URL}/trips`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
     });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Fehler bei der Anfrage");
-    }
-
-    return response.json();
+    if (!response.ok) throw new Error("Fehler beim Laden der Reisen");
+    return await response.json();
 }
 
-export async function createTrip(tripData) {
-    return fetchWithAuth("/trips", {
+export async function fetchTripById(id) {
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/trips/${id}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
+    });
+
+    if (!response.ok) throw new Error("Fehler beim Laden der Reise");
+    return await response.json();
+}
+
+export async function createTrip(data) {
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/trips`, {
         method: "POST",
-        body: JSON.stringify(tripData)
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(data)
     });
+
+    if (!response.ok) throw new Error("Fehler beim Erstellen der Reise");
+    return await response.json();
 }
 
-export async function getAllTrips() {
-    return fetchWithAuth("/trips");
-}
+export async function updateTrip(id, data) {
+    const token = getJWTToken();
 
-export async function getTripById(id) {
-    return fetchWithAuth(`/trips/${id}`);
-}
-
-export async function updateTrip(id, tripData) {
-    return fetchWithAuth(`/trips/${id}`, {
+    const response = await fetch(`${BASE_URL}/trips/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(tripData)
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(data)
     });
+
+    if (!response.ok) throw new Error("Fehler beim Aktualisieren der Reise");
+    return await response.json();
 }
 
 export async function deleteTrip(id) {
-    await fetchWithAuth(`/trips/${id}`, {
-        method: "DELETE"
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/trips/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
     });
 
-    return true;
+    if (!response.ok) throw new Error("Fehler beim Löschen der Reise");
 }
