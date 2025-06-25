@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, updateTrip } from "@/lib/trips/trips.js";
 import { defaultHotel } from "@/lib/constants/defaultHotel.js";
+import { mapTripToForm } from "@/lib/utils/formUtils.js";
 
 export default function EditTripRoute() {
     const { id } = useParams();
@@ -13,30 +14,7 @@ export default function EditTripRoute() {
         async function loadTrip() {
             try {
                 const trip = await fetchTripById(id);
-                const transport = trip.transports?.[0] || {};
-                const hotel = trip.hotels?.[0] || { ...defaultHotel };
-
-                setForm({
-                    tripType: trip.tripType,
-                    startDate: trip.startDate,
-                    endDate: trip.endDate,
-                    transport: {
-                        type: transport.type || "CAR",
-                        date: transport.date || "",
-                        departureTime: `${transport.departureHour || ""}:${transport.departureMinute || ""}`,
-                        arrivalTime: `${transport.arrivalHour || ""}:${transport.arrivalMinute || ""}`,
-                        licensePlate: transport.licensePlate || "",
-                        airline: transport.airline || "",
-                        trainNumber: transport.trainNumber || "",
-                        busNumber: transport.busNumber || ""
-                    },
-                    hotel: {
-                        name: hotel.name || "",
-                        address: hotel.address || defaultHotel.address,
-                        checkInDate: hotel.checkInDate || "",
-                        checkOutDate: hotel.checkOutDate || ""
-                    }
-                });
+                setForm(mapTripToForm(trip, defaultHotel));
             } catch (err) {
                 setError("Fehler beim Laden der Reisedaten: " + err.message);
             }
