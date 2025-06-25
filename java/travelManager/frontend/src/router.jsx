@@ -16,6 +16,7 @@ import EditTripRoute from "@/routes/trip/EditTripRoute.jsx";
 import CreateMeetingRoute from "@/routes/meeting/CreateMeetingRoute.jsx";
 import MeetingOverviewRoute from "@/routes/meeting/MeetingOverviewRoute.jsx";
 import DetailMeetingRoute from "@/routes/meeting/DetailMeetingRoute.jsx";
+import EditMeetingRoute from "@/routes/meeting/EditMeetingRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             {
                 path: "/meetings/:id",
                 element: <DetailMeetingRoute />
+            },
+            {
+                path: "/meetings/edit/:meetingId",
+                element: <EditMeetingRoute />
             },
             {
                 path: "/admin/create-admin",
