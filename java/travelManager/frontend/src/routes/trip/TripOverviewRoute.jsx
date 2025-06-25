@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getSession } from '@/lib/session';
+import { getSession } from '@/lib/session.js';
 
 
 export default function TripOverviewRoute() {
