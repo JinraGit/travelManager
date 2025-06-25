@@ -1,0 +1,76 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchMeetings, deleteMeeting } from "@/lib/meetings/meetings.js";
+import { useCurrentUser } from "@/lib/session.js";
+
+function formatDateEU(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("de-CH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+}
+
+export default function DetailMeetingRoute() {
+    const { meetingId } = useParams();
+    const [meeting, setMeeting] = useState(null);
+    const [error, setError] = useState("");
+    const user = useCurrentUser();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const all = await fetchMeetings(-1, user.id); // -1 lädt alle Meetings
+                const found = all.find(m => m.id === parseInt(meetingId));
+                if (!found) throw new Error("Meeting nicht gefunden.");
+                setMeeting(found);
+            } catch (err) {
+                setError("Fehler beim Laden: " + (err.message || ""));
+            }
+        }
+        if (user?.id) load();
+    }, [user, meetingId]);
+
+    const handleDelete = async () => {
+        if (!confirm("Möchtest du dieses Meeting wirklich löschen?")) return;
+        try {
+            await deleteMeeting(meetingId);
+            navigate("/meetings");
+        } catch (err) {
+            setError("Löschen fehlgeschlagen: " + (err.message || ""));
+        }
+    };
+
+    if (error) return <div className="alert alert-danger mt-4">{error}</div>;
+    if (!meeting) return <div className="mt-4">Lade Meeting ...</div>;
+
+    return (
+        <div className="container mt-4">
+            <h2 style={{ color: "#003366" }}>Meeting-Details</h2>
+            <hr />
+
+            <div className="p-3 bg-light rounded shadow-sm">
+                <p><strong>Name:</strong> {meeting.name}</p>
+                <p><strong>Datum:</strong> {formatDateEU(meeting.date)}</p>
+                <p><strong>Beginn:</strong> {meeting.startMeeting}</p>
+                <p><strong>Ende:</strong> {meeting.endMeeting}</p>
+                <p><strong>Notizen:</strong> {meeting.notes || "—"}</p>
+            </div>
+
+            <div className="mt-4 d-flex gap-2">
+                <button
+                    className="btn"
+                    style={{ backgroundColor: "#e7f0fb", color: "#003366" }}
+                    onClick={() => navigate(`/meetings/edit/${meeting.id}`)}
+                >
+                    Bearbeiten
+                </button>
+                <button className="btn btn-danger" onClick={handleDelete}>
+                    Löschen
+                </button>
+            </div>
+        </div>
+    );
+}

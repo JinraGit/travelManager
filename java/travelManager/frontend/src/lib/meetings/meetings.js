@@ -16,6 +16,21 @@ export async function fetchMeetings(tripId, accountId) {
     return await response.json();
 }
 
+export async function fetchMeetingById(meetingId, accountId) {
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/meetings/${meetingId}?accountId=${accountId}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
+    });
+
+    if (!response.ok) throw new Error("Fehler beim Laden des Meetings");
+    return await response.json();
+}
+
 export async function createMeeting(accountId, data) {
     const token = getJWTToken();
 
