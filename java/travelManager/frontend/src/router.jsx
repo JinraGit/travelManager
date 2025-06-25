@@ -12,6 +12,7 @@ import TripOverviewRoute from "@/routes/trip/TripOverviewRoute.jsx";
 import CreateTripRoute from "@/routes/trip/CreateTripRoute.jsx";
 import WelcomeRoute from "@/routes/dashboard/WelcomeRoute.jsx";
 import DetailTripRoute from "@/routes/trip/DetailTripRoute.jsx";
+import EditTripRoute from "@/routes/trip/EditTripRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             {
                 path: "trips/create",
                 element: <CreateTripRoute/>
+            },
+            {
+                path: "/trips/:id/edit",
+                element: <EditTripRoute />
             },
             {
                 path: "/trips/all",
