@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, updateTrip } from "@/lib/trips/trips.js";
 import { defaultHotel } from "@/lib/constants/defaultHotel.js";
 import { mapTripToForm, handleTripFormChange } from "@/lib/utils/tripFormUtils.js";
+import { buildTransportPayload} from "@/lib/utils/transportUtils.js";
 
 export default function EditTripRoute() {
     const { id } = useParams();
@@ -29,21 +30,7 @@ export default function EditTripRoute() {
         e.preventDefault();
         setError("");
 
-        let [depHour = "", depMin = ""] = form.transport.departureTime?.split(":") || [];
-        let [arrHour = "", arrMin = ""] = form.transport.arrivalTime?.split(":") || [];
-
-        const transport = {
-            type: form.transport.type,
-            date: form.transport.date,
-            departureHour: depHour,
-            departureMinute: depMin,
-            arrivalHour: arrHour,
-            arrivalMinute: arrMin,
-            licensePlate: form.transport.type === "CAR" ? form.transport.licensePlate : null,
-            airline: form.transport.type === "AIRPLANE" ? form.transport.airline : null,
-            trainNumber: form.transport.type === "TRAIN" ? form.transport.trainNumber : null,
-            busNumber: form.transport.type === "BUS" ? form.transport.busNumber : null
-        };
+        const transport = buildTransportPayload(form);
 
         const hotel = {
             name: form.hotel.name,
