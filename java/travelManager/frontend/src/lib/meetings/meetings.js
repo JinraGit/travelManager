@@ -1,58 +1,65 @@
-import { getJWTToken } from "@/lib/session";
-
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+import { getJWTToken } from "@/lib/session.js";
 
-async function fetchWithAuth(url, options = {}) {
+export async function fetchMeetings(tripId, accountId) {
     const token = getJWTToken();
-    if (!token) {
-        throw new Error("Keine Authentifizierung vorhanden");
-    }
 
-    const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        ...options.headers
-    };
-
-    const response = await fetch(`${BASE_URL}${url}`, {
-        ...options,
-        headers
+    const response = await fetch(`${BASE_URL}/meetings/list/${tripId}?accountId=${accountId}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
     });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Fehler bei der Anfrage");
-    }
-
-    return response.json();
+    if (!response.ok) throw new Error("Fehler beim Laden der Meetings");
+    return await response.json();
 }
 
-// Meetings für einen bestimmten Trip abrufen
-export async function getMeetings(tripId, accountId) {
-    return fetchWithAuth(`/meetings/list/${tripId}?accountId=${accountId}`);
-}
+export async function createMeeting(accountId, data) {
+    const token = getJWTToken();
 
-// Ein neues Meeting erstellen
-export async function createMeeting(meetingData, accountId) {
-    return fetchWithAuth(`/meetings/create?accountId=${accountId}`, {
+    const response = await fetch(`${BASE_URL}/meetings/create?accountId=${accountId}`, {
         method: "POST",
-        body: JSON.stringify(meetingData)
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(data)
     });
+
+    if (!response.ok) throw new Error("Fehler beim Erstellen des Meetings");
+    return await response.json();
 }
 
-// Ein bestehendes Meeting aktualisieren
-export async function updateMeeting(meetingId, meetingData, accountId) {
-    return fetchWithAuth(`/meetings/edit/${meetingId}?accountId=${accountId}`, {
+export async function updateMeeting(meetingId, accountId, data) {
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/meetings/edit/${meetingId}?accountId=${accountId}`, {
         method: "PUT",
-        body: JSON.stringify(meetingData)
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(data)
     });
+
+    if (!response.ok) throw new Error("Fehler beim Aktualisieren des Meetings");
+    return await response.json();
 }
 
-// Ein Meeting löschen
 export async function deleteMeeting(meetingId) {
-    await fetchWithAuth(`/meetings/delete/${meetingId}`, {
-        method: "DELETE"
+    const token = getJWTToken();
+
+    const response = await fetch(`${BASE_URL}/meetings/delete/${meetingId}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        credentials: "include"
     });
 
-    return true;
+    if (!response.ok) throw new Error("Fehler beim Löschen des Meetings");
 }

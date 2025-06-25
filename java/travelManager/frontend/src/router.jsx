@@ -10,6 +10,7 @@ import CreateAdminRoute from "@/routes/admin/CreateAdminRoute.jsx";
 import ManageAccountsRoute from "@/routes/admin/ManageAccountsRoute.jsx";
 import TripOverviewRoute from "@/routes/dashboard/TripOverviewRoute.jsx";
 import CreateTripRoute from "@/routes/dashboard/CreateTripRoute.jsx";
+import WelcomeRoute from "@/routes/dashboard/WelcomeRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
             {
                 path: "*",
                 element: <NotFoundRoute />,
+            },
+            {
+                path: "/",
+                element: <WelcomeRoute/>
             },
         ],
     },
