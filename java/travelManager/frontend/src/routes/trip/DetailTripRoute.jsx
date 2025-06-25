@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, deleteTrip } from "@/lib/trips/trips.js";
+import { formatDateEU } from "@/lib/utils/dateUtils.js";
 
-// Datum im europäischen Format
-function formatDateEU(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("de-CH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-}
 
 // Benutzerfreundlicher Transport-Typ
 function getTransportLabel(type) {

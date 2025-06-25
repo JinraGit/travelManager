@@ -28,13 +28,10 @@ async function clientAction({request}) {
         const id = response?.account?.id;
 
         if (roles.includes("ADMIN")) {
-            return redirect("/dashboard/admin");
+            return redirect("/");
         }
-        if (roles.includes("COACH")) {
-            return redirect("/dashboard/coach");
-        }
-        if (roles.includes("APPRENTICE") && id) {
-            return redirect(`/dashboard/apprentice/${id}`);
+        if (roles.includes("USER") && id) {
+            return redirect("trips/all");
         }
 
         return redirect("/");

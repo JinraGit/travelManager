@@ -3,15 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { createMeeting } from "@/lib/meetings/meetings.js";
 import { getJWTToken, decodeJWT } from "@/lib/session.js";
 import { fetchAllTrips } from "@/lib/trips/trips.js";
+import { formatDateEU } from "@/lib/utils/dateUtils.js";
 
-function formatDateEU(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("de-CH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    });
-}
 
 export default function CreateMeetingRoute() {
     const navigate = useNavigate();

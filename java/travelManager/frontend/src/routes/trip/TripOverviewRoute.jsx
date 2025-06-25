@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchAllTrips } from "@/lib/trips/trips.js";
 import { Link } from "react-router-dom";
+import { formatDateEU } from "@/lib/utils/dateUtils.js";
 
-function formatDateEU(isoDate) {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("de-CH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-}
 
 export default function TripOverviewRoute() {
     const [trips, setTrips] = useState([]);

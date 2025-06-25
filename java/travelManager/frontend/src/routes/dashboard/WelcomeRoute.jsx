@@ -20,7 +20,7 @@ export default function WelcomeRoute() {
                 />
                 <h1 className="text-info-emphasis">Willkommen zurück, {username}!</h1>
                 <p className="text-muted fs-5 mt-3">
-                    Schön, dass du wieder da bist. Nutze das Menü links, um auf deine Funktionen zuzugreifen.
+                    Schön, dass du wieder da bist. Nutze das Menü links, um auf deine Reisen und Meetings managen.
                 </p>
             </div>
         </div>

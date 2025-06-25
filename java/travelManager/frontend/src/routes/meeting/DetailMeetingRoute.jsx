@@ -2,15 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMeetingById, deleteMeeting } from "@/lib/meetings/meetings.js";
 import { useCurrentUser } from "@/lib/session.js";
+import { formatDateEU } from "@/lib/utils/dateUtils.js";
 
-function formatDateEU(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("de-CH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    });
-}
+
 
 export default function DetailMeetingRoute() {
     const { id } = useParams();
