@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, deleteTrip } from "@/lib/trips/trips.js";
 
+// Datum im europäischen Format
 function formatDateEU(dateStr) {
     const date = new Date(dateStr);
     return date.toLocaleDateString("de-CH", {
@@ -9,6 +10,22 @@ function formatDateEU(dateStr) {
         month: "2-digit",
         year: "numeric",
     });
+}
+
+// Benutzerfreundlicher Transport-Typ
+function getTransportLabel(type) {
+    switch (type) {
+        case "CAR":
+            return "Auto";
+        case "TRAIN":
+            return "Bahn";
+        case "AIRPLANE":
+            return "Flugzeug";
+        case "BUS":
+            return "Bus";
+        default:
+            return type;
+    }
 }
 
 export default function DetailTripRoute() {
@@ -48,21 +65,19 @@ export default function DetailTripRoute() {
 
     return (
         <div className="container mt-4">
-            <div className="bg-primary text-white p-3 rounded mb-3">
-                <h2>Reisedetails</h2>
-            </div>
+            <h2 className="text-primary">Reisedetails</h2>
 
-            <div className="bg-primary text-white p-3 rounded mb-3">
-                <h4>Allgemein</h4>
+            <div className="bg-light p-3 rounded mb-3">
+                <h4 className="text-primary">Allgemein</h4>
                 <p><strong>Reisetyp:</strong> {trip.tripType === "BUSINESS" ? "Geschäftlich" : "Privat"}</p>
                 <p><strong>Start:</strong> {formatDateEU(trip.startDate)}</p>
                 <p><strong>Ende:</strong> {formatDateEU(trip.endDate)}</p>
             </div>
 
             {transport && (
-                <div className="bg-primary text-white p-3 rounded mb-3">
-                    <h4>Transport</h4>
-                    <p><strong>Typ:</strong> {transport.type}</p>
+                <div className="bg-light p-3 rounded mb-3">
+                    <h4 className="text-primary">Transport</h4>
+                    <p><strong>Transportmittel:</strong> {getTransportLabel(transport.type)}</p>
                     <p><strong>Datum:</strong> {formatDateEU(transport.date)}</p>
                     <p><strong>Abfahrt:</strong> {transport.departureHour}:{transport.departureMinute}</p>
                     <p><strong>Ankunft:</strong> {transport.arrivalHour}:{transport.arrivalMinute}</p>
@@ -83,8 +98,8 @@ export default function DetailTripRoute() {
             )}
 
             {hotel && (
-                <div className="bg-primary text-white p-3 rounded mb-3">
-                    <h4>Hotel</h4>
+                <div className="bg-light p-3 rounded mb-3">
+                    <h4 className="text-primary">Hotel</h4>
                     <p><strong>Name:</strong> {hotel.name}</p>
                     <p><strong>Adresse:</strong> {hotel.address.street} {hotel.address.houseNumber}, {hotel.address.zipCode} {hotel.address.city}</p>
                     <p><strong>Check-In:</strong> {formatDateEU(hotel.checkInDate)}</p>
@@ -93,16 +108,10 @@ export default function DetailTripRoute() {
             )}
 
             <div className="d-flex gap-2 mt-4">
-                <button
-                    className="btn btn-warning"
-                    onClick={() => navigate(`/trips/${id}/edit`)}
-                >
+                <button className="btn btn-warning" onClick={() => navigate(`/trips/${id}/edit`)}>
                     Bearbeiten
                 </button>
-                <button
-                    className="btn btn-danger"
-                    onClick={handleDelete}
-                >
+                <button className="btn btn-danger" onClick={handleDelete}>
                     Löschen
                 </button>
             </div>
