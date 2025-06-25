@@ -108,7 +108,7 @@ export default function DetailTripRoute() {
             )}
 
             <div className="d-flex gap-2 mt-4">
-                <button className="btn btn-warning" onClick={() => navigate(`/trips/${id}/edit`)}>
+                <button className="btn btn-info text-white" onClick={() => navigate(`/trips/${id}/edit`)}>
                     Bearbeiten
                 </button>
                 <button className="btn btn-danger" onClick={handleDelete}>
