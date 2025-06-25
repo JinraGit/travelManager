@@ -11,6 +11,7 @@ import ManageAccountsRoute from "@/routes/admin/ManageAccountsRoute.jsx";
 import TripOverviewRoute from "@/routes/trip/TripOverviewRoute.jsx";
 import CreateTripRoute from "@/routes/trip/CreateTripRoute.jsx";
 import WelcomeRoute from "@/routes/dashboard/WelcomeRoute.jsx";
+import DetailTripRoute from "@/routes/trip/DetailTripRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
             {
                 path: "/trips/all",
                 element: <TripOverviewRoute />
+            },
+            {
+                path: "/trips/:id",
+                element: <DetailTripRoute />
             },
             {
                 path: "/admin/create-admin",
