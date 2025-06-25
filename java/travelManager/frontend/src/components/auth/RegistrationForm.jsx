@@ -36,7 +36,7 @@ export default function AuthForm() {
     return (
         <div className={styles.wrapper}>
             <div className={`card p-4 shadow ${styles.card}`}>
-                <img src="/assets/LeoLogo.png" alt="Logo" className={styles.logo}/>
+                <img src="/assets/tm_logo.png" alt="Logo" className={styles.logo}/>
                 <h2 className={styles.title}>Registrierung</h2>
 
                 {submitError && (
@@ -85,13 +85,13 @@ export default function AuthForm() {
                         {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                     </div>
 
-                    <button type="submit" className="btn btn-success w-100 mb-2">Anmelden</button>
+                    <button type="submit" className="btn btn-secondary w-100 mb-2">Anmelden</button>
                 </form>
 
 
                 <p className="text-center mt-3">
                     Hast du bereits ein account?{" "}
-                    <a href="/accounts/signin" className="text-decoration-none">
+                    <a href="/accounts/signin" className="text-info text-decoration-none">
                         Hier anmelden
                     </a>
                 </p>

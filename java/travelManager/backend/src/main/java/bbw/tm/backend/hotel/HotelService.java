@@ -1,5 +1,7 @@
 package bbw.tm.backend.hotel;
 
+import bbw.tm.backend.trip.Trip;
+import bbw.tm.backend.trip.TripRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,17 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
 
+
     public HotelDTO saveHotel(HotelCreateDTO hotelCreateDTO) {
         Hotel hotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
+
+        // Trip-Verknüpfung entfällt, Trip-IDs sind nicht mehr Teil von HotelCreateDTO
+        // Das Hotel wird direkt gespeichert, ohne manuelle Trip-Zuweisung
         Hotel savedHotel = hotelRepository.save(hotel);
+
         return hotelMapper.toDTO(savedHotel);
     }
+
 
     public HotelDTO updateHotelPartially(Integer id, HotelDTO hotelDTO) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));

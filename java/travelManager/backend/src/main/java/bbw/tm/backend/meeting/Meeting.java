@@ -1,5 +1,6 @@
 package bbw.tm.backend.meeting;
 
+import bbw.tm.backend.address.Address;
 import bbw.tm.backend.common.BaseEntity;
 import bbw.tm.backend.trip.Trip;
 import jakarta.persistence.*;
@@ -15,13 +16,16 @@ import java.time.LocalTime;
 public class Meeting extends BaseEntity {
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private LocalDate date;
 
     @Column(nullable = false)
-    private LocalTime time;
+    private String startMeeting;
 
     @Column(nullable = false)
-    private String location;
+    private String endMeeting;
 
     @Column
     private String notes;

@@ -13,7 +13,6 @@ public class TransportResponseDTO {
     private Integer id; // Transport-ID
     private TransportType type; // Transportmitteltyp
     private LocalDate date; // Datum
-    private Double price; // Preis
 
     private String departureHour; // Abreise-Stunde
     private String departureMinute; // Abreise-Minute

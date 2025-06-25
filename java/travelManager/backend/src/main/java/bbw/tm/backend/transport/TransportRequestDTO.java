@@ -22,9 +22,6 @@ public class TransportRequestDTO {
     @NotNull
     private LocalDate date; // Datum
 
-    @NotNull
-    private Double price; // Preis
-
     @Pattern(regexp = "([01][0-9]|2[0-3])", message = "Hour must be between 00 and 23.")
     @Schema(description = "Hour of departure (00-23)", example = "22")
     private String departureHour;
@@ -93,10 +90,6 @@ public class TransportRequestDTO {
         if (date == null) {
             throw new IllegalArgumentException("Date is required.");
         }
-        if (price == null) {
-            throw new IllegalArgumentException("Price is required.");
-        }
-
 
     }
 

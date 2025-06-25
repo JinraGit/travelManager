@@ -9,6 +9,5 @@ public record HotelDTO(
     String name,
     AddressDTO address,
     LocalDate checkInDate,
-    LocalDate checkOutDate,
-    Double price
+    LocalDate checkOutDate
 ) {}

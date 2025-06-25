@@ -102,12 +102,14 @@ public class WebConfiguration implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.GET, "/trips/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/trips/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/trips/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/trips/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/trips/**").authenticated()
 
                         // Hotels-Endpunkte: Zugriff nur für authentifizierte Benutzer
                         .requestMatchers(HttpMethod.GET, "/hotels/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/hotels/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/hotels/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/hotels/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/hotels/**").authenticated()
 
 

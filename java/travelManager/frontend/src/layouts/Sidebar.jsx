@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import { removeSession, getUserRoles } from "../lib/session";
 
@@ -20,8 +21,6 @@ export default function Sidebar() {
 
     const isActive = (path) => (location.pathname === path ? styles.active : "");
 
-    // const dashboardPath = isAdmin ? "/dashboard/admin" : isUser ? "/dashboard/user" : "/";
-
     const roleLabel = isAdmin ? "Admin" : isUser ? "Benutzer" : "Gast";
 
     return (
@@ -35,46 +34,47 @@ export default function Sidebar() {
             <div className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
                 {/* Header */}
                 <div className={styles.header}>
-                    <img src="/assets/tm_logo.png" alt="LEO Logo" className={styles.logo} />
-                    <h4 className={styles.title}>L.E.O</h4>
+                    <img src="/assets/tm_logo.png" alt="TravelManager Logo" className={styles.logo} />
+                    <h4 className={styles.title}>Travel Manager</h4>
                 </div>
 
                 {/* Navigation */}
                 <nav className={styles.nav}>
-                    {/* Dashboard Link */}
-                    {/*<a href={dashboardPath} className={`${styles.navLink} ${isActive(dashboardPath)}`}>*/}
-                    {/*    <img src="/assets/icons/home.png" alt="Dashboard Icon" className={styles.icon} />*/}
-                    {/*    Dashboard*/}
-                    {/*</a>*/}
-
                     <hr className={styles.separator} />
 
                     {/* Admin-only Links */}
                     {isAdmin && (
                         <>
-                            <a href="/admin/manage-accounts" className={`${styles.navLink} ${isActive("/admin/manage-accounts")}`}>
+                            <Link to="/admin/manage-accounts" className={`${styles.navLink} ${isActive("/admin/manage-accounts")}`}>
                                 <img src="/assets/icons/group.png" alt="Benutzerverwaltung Icon" className={styles.icon} />
                                 Benutzerverwaltung
-                            </a>
-                            <a href="/admin/create-admin" className={`${styles.navLink} ${isActive("/admin/create-admin")}`}>
-                                <img
-                                    src="/assets/icons/administrate.png" /* Ein passendes Admin-Icon kann hier verwendet werden */
-                                    alt="Admin erstellen Icon"
-                                    className={styles.icon}
-                                />
+                            </Link>
+                            <Link to="/admin/create-admin" className={`${styles.navLink} ${isActive("/admin/create-admin")}`}>
+                                <img src="/assets/icons/administrate.png" alt="Admin erstellen Icon" className={styles.icon} />
                                 Admin erstellen
-                            </a>
-
+                            </Link>
                         </>
                     )}
 
                     {/* User-only Links */}
                     {isUser && (
                         <>
-                            {/*<a href="/user/profile" className={`${styles.navLink} ${isActive("/user/profile")}`}>*/}
-                            {/*    <img src="/assets/icons/user.png" alt="Benutzerprofil Icon" className={styles.icon} />*/}
-                            {/*    Mein Profil*/}
-                            {/*</a>*/}
+                            <Link to="/trips/create" className={`${styles.navLink} ${isActive("/trips/create")}`}>
+                                <img src="/assets/icons/newTrip.png" alt="Neuen Trip erstellen" className={styles.icon} />
+                                Trip eintragen
+                            </Link>
+                            <Link to="/trips/all" className={`${styles.navLink} ${isActive("/trips/all")}`}>
+                                <img src="/assets/icons/allTrips.png" alt="Alle Trips anzeigen" className={styles.icon} />
+                                Trips anzeigen
+                            </Link>
+                            <Link to="/meetings/create" className={`${styles.navLink} ${isActive("/meetings/create")}`}>
+                                <img src="/assets/icons/meetingCreate.png" alt="Neues Meeting erstellen" className={styles.icon} />
+                                Meeting eintragen
+                            </Link>
+                            <Link to="/meetings/all" className={`${styles.navLink} ${isActive("/meetings/all")}`}>
+                                <img src="/assets/icons/meeting.png" alt="Alle Meetings anzeigen" className={styles.icon} />
+                                Meetings anzeigen
+                            </Link>
                         </>
                     )}
                 </nav>

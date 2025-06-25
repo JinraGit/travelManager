@@ -2,10 +2,13 @@ package bbw.tm.backend.trip;
 
 import bbw.tm.backend.FailedValidationException;
 import bbw.tm.backend.account.Account;
+import bbw.tm.backend.address.Address;
+import bbw.tm.backend.address.AddressMapper;
 import bbw.tm.backend.hotel.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +20,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
-    private final HotelService hotelService;
+    private final AddressMapper addressMapper;
 
     /**
      * Holt alle Trips des authentifizierten Accounts.
@@ -46,6 +49,21 @@ public class TripService {
                 ));
     }
 
+
+    /**
+     * Holt einen bestimmten Trip anhand der ID
+     *
+     * @param id Die ID des Trips.
+     * @return Der gesuchte Trip als ResponseDTO.
+     */
+    public Trip getTripById(Integer id) {
+        return tripRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trip mit ID " + id + " nicht gefunden."));
+    }
+
+
+
+
     /**
      * Holt einen Trip anhand der ID und authentifiziertem Account direkt als Entity.
      * Diese Methode wird für andere Services benötigt, z. B. für Transport.
@@ -72,30 +90,31 @@ public class TripService {
     public TripResponseDTO createTrip(TripRequestDTO requestDTO, Account account) {
         Trip trip = TripMapper.toTrip(requestDTO, account);
 
-        // Hotels erstellen oder vorhandene Hotels verwenden
+        // Verknüpfen von Hotels
         if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
             List<Hotel> hotels = requestDTO.getHotels().stream()
-                    .map(this::findOrCreateHotel) // Hotel finden oder erstellen
+                    .map(hotelCreateDTO -> {
+                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+
+                        // Automatische Verknüpfung sicherstellen
+                        if (!hotel.getTrips().contains(trip)) {
+                            hotel.getTrips().add(trip);
+                        }
+                        return hotel;
+                    })
                     .toList();
 
-            // Sicherstellen, dass der Trip im Hotel gesetzt wird (bidirektionale Beziehung)
-            for (Hotel hotel : hotels) {
-                hotel.setTrip(trip); // Verknüpfe Hotel mit Trip
-            }
-
-            trip.setHotels(hotels); // Hotels dem Trip hinzufügen
+            trip.setHotels(hotels);
         }
 
-        // Trip speichern (inklusive verknüpfter Hotels)
+        // Speichern des Trips (inkl. verknüpfter Hotels)
         Trip savedTrip = tripRepository.save(trip);
         return TripMapper.toResponseDTO(savedTrip);
     }
 
 
-
-
     /**
-     * Aktualisiert einen vorhandenen Trip für einen Account, einschließlich eines Hotels.
+     * Aktualisiert einen vorhandenen Trip für einen Account, einschliesslich eines Hotels.
      *
      * @param id         Die ID des zu aktualisierenden Trips.
      * @param requestDTO Die neuen Daten des Trips.
@@ -103,12 +122,13 @@ public class TripService {
      * @return Der aktualisierte Trip als ResponseDTO.
      */
     public TripResponseDTO updateTripForAccount(Integer id, TripRequestDTO requestDTO, Account account) {
+        // Trip suchen und validieren
         Trip trip = tripRepository.findByIdAndAccountId(id, account.getId())
                 .orElseThrow(() -> new FailedValidationException(
                         Map.of("id", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
                 ));
 
-        // Partielle Aktualisierung der Felder
+        // Felder aktualisieren (Schritt für Schritt prüfen)
         if (requestDTO.getTripType() != null) {
             trip.setTripType(requestDTO.getTripType());
         }
@@ -119,22 +139,29 @@ public class TripService {
             trip.setEndDate(requestDTO.getEndDate());
         }
 
-        // Hotels aktualisieren oder hinzufügen
+        // Aktualisierung der Hotels
         if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
             List<Hotel> hotels = requestDTO.getHotels().stream()
-                    .map(this::findOrCreateHotel)
+                    .map(hotelCreateDTO -> {
+                        // Sicherstellen, dass Hotel fehlerfrei erstellt/verknüpft wird
+                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+
+                        // Automatische Verknüpfung sicherstellen
+                        if (!hotel.getTrips().contains(trip)) {
+                            hotel.getTrips().add(trip);
+                        }
+                        return hotel;
+                    })
                     .toList();
-            for (Hotel hotel : hotels) {
-                hotel.setTrip(trip); // Trip im Hotel setzen
-            }
-            trip.setHotels(hotels);
-        }
 
-
-
-        Trip updatedTrip = tripRepository.save(trip);
-        return TripMapper.toResponseDTO(updatedTrip);
+        trip.setHotels(new ArrayList<>(hotels));
     }
+
+    // Trip muss gültig gespeichert werden können
+    Trip updatedTrip = tripRepository.save(trip);
+    return TripMapper.toResponseDTO(updatedTrip);
+}
+
 
     /**
      * Löscht einen bestimmten Trip, wenn er zum Account gehört.
@@ -143,10 +170,19 @@ public class TripService {
      * @param account Der Account, dessen Trip gelöscht werden soll.
      */
     public void deleteTripForAccount(Integer id, Account account) {
+        // Hole den Trip und validiere ihn
         Trip trip = tripRepository.findByIdAndAccountId(id, account.getId())
                 .orElseThrow(() -> new FailedValidationException(
                         Map.of("id", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
                 ));
+
+        // Beziehungen zu Hotels entfernen
+        if (trip.getHotels() != null) {
+            trip.getHotels().forEach(hotel -> hotel.getTrips().remove(trip));
+            trip.setHotels(null); // Entfernen der Assoziation des Trips zu den Hotels
+        }
+
+        // Trip löschen
         tripRepository.delete(trip);
     }
 
@@ -154,28 +190,24 @@ public class TripService {
      * Hilfsmethode, um ein Hotel zu finden oder bei Bedarf zu erstellen.
      *
      */
-    private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
-        // Prüfe, ob das Hotel bereits existiert
-        Optional<Hotel> existingHotel = hotelRepository.findByNameAndCheckInDate(
-                hotelCreateDTO.name(),
-                hotelCreateDTO.checkInDate()
-        );
+private Hotel findOrCreateHotel(HotelCreateDTO hotelCreateDTO) {
+    Address address = addressMapper.fromCreateDTO(hotelCreateDTO.address());
 
-        if (existingHotel.isPresent()) {
-            // Clonen, um Konflikte in Trip-Zuordnungen zu verhindern
-            Hotel original = existingHotel.get();
-            Hotel clonedHotel = new Hotel();
+    // Überprüfen, ob ein passendes Hotel bereits existiert
+    Optional<Hotel> existingHotel = hotelRepository.findByNameAndAddress(
+            hotelCreateDTO.name(),
+            address.getStreet(),
+            address.getCity(),
+            address.getZipCode()
 
-            clonedHotel.setName(original.getName());
-            clonedHotel.setCheckInDate(original.getCheckInDate());
-            clonedHotel.setCheckOutDate(original.getCheckOutDate());
-            clonedHotel.setPrice(original.getPrice());
-            clonedHotel.setAddress(original.getAddress()); // Falls Address-Informationen mitkopiert werden sollen
+    );
 
-            return clonedHotel; // Neuer Datensatz wird erstellt
-        }
-
-        // Neues Hotel erstellen, wenn keins gefunden wurde
-        return hotelMapper.fromCreateDTO(hotelCreateDTO);
+    if (existingHotel.isPresent()) {
+        // Rückgabe des bestehenden Hotels
+        return existingHotel.get();
+    }
+    // Wenn kein Hotel existiert, erstelle ein neues
+    Hotel newHotel = hotelMapper.fromCreateDTO(hotelCreateDTO);
+    return hotelRepository.save(newHotel);
     }
 }

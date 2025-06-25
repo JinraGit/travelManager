@@ -16,4 +16,10 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
     exclude: [...configDefaults.exclude, 'e2e/**']
   },
+  server: {
+    proxy: {
+      '/trips': 'http://localhost:8080',
+      '/api': 'http://localhost:8080'
+    }
+  }
 });

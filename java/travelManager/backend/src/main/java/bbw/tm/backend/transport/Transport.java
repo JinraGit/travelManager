@@ -22,9 +22,6 @@ public class Transport extends BaseEntity {
     @Column(nullable = false)
     private LocalDate date; // Datum der Reise
 
-    @Column(nullable = false)
-    private Double price; // Preis des Transportmittels
-
     @Column(length = 2) // Max. 2 Zeichen für Stunden
     private String departureHour; // Abreise-Stunde
 
