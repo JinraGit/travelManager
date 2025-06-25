@@ -2,23 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, deleteTrip } from "@/lib/trips/trips.js";
 import { formatDateEU } from "@/lib/utils/dateUtils.js";
-
-
-// Benutzerfreundlicher Transport-Typ
-function getTransportLabel(type) {
-    switch (type) {
-        case "CAR":
-            return "Auto";
-        case "TRAIN":
-            return "Bahn";
-        case "AIRPLANE":
-            return "Flugzeug";
-        case "BUS":
-            return "Bus";
-        default:
-            return type;
-    }
-}
+import { getTransportLabel } from "@/lib/utils/transportUtils.js";
 
 export default function DetailTripRoute() {
     const { id } = useParams();
