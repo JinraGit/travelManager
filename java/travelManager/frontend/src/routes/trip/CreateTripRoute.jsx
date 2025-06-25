@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTrip } from "@/lib/trips/trips.js";
+import { defaultHotel } from "@/lib/constants/defaultHotel.js";
+
 
 const defaultTransport = {
     type: "CAR",
@@ -11,18 +13,6 @@ const defaultTransport = {
     airline: "",
     trainNumber: "",
     busNumber: ""
-};
-
-const defaultHotel = {
-    name: "",
-    address: {
-        street: "",
-        houseNumber: "",
-        city: "",
-        zipCode: ""
-    },
-    checkInDate: "",
-    checkOutDate: ""
 };
 
 export default function CreateTripRoute() {

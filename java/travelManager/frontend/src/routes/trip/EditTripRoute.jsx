@@ -1,18 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, updateTrip } from "@/lib/trips/trips.js";
-
-const defaultHotel = {
-    name: "",
-    address: {
-        street: "",
-        houseNumber: "",
-        city: "",
-        zipCode: ""
-    },
-    checkInDate: "",
-    checkOutDate: ""
-};
+import { defaultHotel } from "@/lib/constants/defaultHotel.js";
 
 export default function EditTripRoute() {
     const { id } = useParams();
