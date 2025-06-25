@@ -125,7 +125,7 @@ export default function EditTripRoute() {
 
         try {
             await updateTrip(id, payload);
-            navigate("/dashboard/trips");
+            navigate("/trips/all");
         } catch (err) {
             setError("Update fehlgeschlagen: " + err.message);
         }

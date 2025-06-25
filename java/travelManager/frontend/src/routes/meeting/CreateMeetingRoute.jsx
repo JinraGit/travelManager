@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createMeeting } from "@/lib/meetings/meetings.js";
-import { getJWTToken, decodeJWT } from "@/lib/session.js";
 import { fetchAllTrips } from "@/lib/trips/trips.js";
 import { formatDateEU } from "@/lib/utils/dateUtils.js";
-
+import { getUserIdFromToken } from "@/lib/session.js";
 
 export default function CreateMeetingRoute() {
     const navigate = useNavigate();
@@ -47,9 +46,8 @@ export default function CreateMeetingRoute() {
         setError("");
 
         try {
-            const token = getJWTToken();
-            const decoded = decodeJWT(token);
-            const accountId = parseInt(decoded.sub);
+            const accountId = getUserIdFromToken();
+            if (!accountId) throw new Error("Kein Benutzer eingeloggt");
 
             const payload = {
                 name: form.name,

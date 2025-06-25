@@ -110,7 +110,7 @@ export default function CreateTripRoute() {
 
         try {
             await createTrip(payload);
-            navigate("/dashboard/trips");
+            navigate("/trips/all");
         } catch (err) {
             setError("Erstellen fehlgeschlagen: " + (err.message || "Unbekannter Fehler"));
         }
