@@ -1,3 +1,6 @@
+import {buildHotelPayload} from "@/lib/utils/hotelUtils.js";
+import {buildTransportPayload} from "@/lib/utils/transportUtils.js";
+
 export function mapTripToForm(trip, defaultHotel) {
     const transport = trip.transports?.[0] || {};
     const hotel = trip.hotels?.[0] || { ...defaultHotel };
@@ -55,4 +58,15 @@ export function handleTripFormChange(e, setForm) {
     } else {
         setForm(prev => ({ ...prev, [name]: value }));
     }
+}
+
+
+export function buildTripPayload(form) {
+    return {
+        tripType: form.tripType,
+        startDate: form.startDate,
+        endDate: form.endDate,
+        transports: [buildTransportPayload(form)],
+        hotels: [buildHotelPayload(form)]
+    };
 }

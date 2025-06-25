@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createTrip } from "@/lib/trips/trips.js";
 import { defaultHotel } from "@/lib/constants/defaultHotel.js";
 import { defaultTransport } from "@/lib/constants/defaultTransport.js";
-import { handleTripFormChange } from "@/lib/utils/tripFormUtils.js";
-import { buildTransportPayload } from "@/lib/utils/transportUtils.js";
-import { buildHotelPayload } from "@/lib/utils/hotelUtils.js";
+import {buildTripPayload, handleTripFormChange} from "@/lib/utils/tripFormUtils.js";
 import TripForm from "@/components/trips/TripForm.jsx";
 
 export default function CreateTripRoute() {
@@ -25,16 +23,7 @@ export default function CreateTripRoute() {
         e.preventDefault();
         setError("");
 
-        const transport = buildTransportPayload(form);
-        const hotel = buildHotelPayload(form);
-
-        const payload = {
-            tripType: form.tripType,
-            startDate: form.startDate,
-            endDate: form.endDate,
-            transports: [transport],
-            hotels: [hotel]
-        };
+        const payload = buildTripPayload(form);
 
         try {
             await createTrip(payload);

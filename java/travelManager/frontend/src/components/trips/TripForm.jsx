@@ -3,7 +3,7 @@ export default function TripForm({ form, onChange, onSubmit }) {
 
     return (
         <form onSubmit={onSubmit}>
-
+            {/* Reisetyp */}
             <div className="mb-3">
                 <label>Reisetyp</label>
                 <select name="tripType" className="form-control" value={form.tripType} onChange={onChange}>
@@ -12,6 +12,7 @@ export default function TripForm({ form, onChange, onSubmit }) {
                 </select>
             </div>
 
+            {/* Start-/Ende */}
             <div className="mb-3">
                 <label>Startdatum</label>
                 <input type="date" name="startDate" className="form-control" value={form.startDate} onChange={onChange} />
@@ -21,6 +22,7 @@ export default function TripForm({ form, onChange, onSubmit }) {
                 <input type="date" name="endDate" className="form-control" value={form.endDate} onChange={onChange} />
             </div>
 
+            {/* Transport */}
             <h4>Transport</h4>
             <div className="mb-3">
                 <label>Typ</label>

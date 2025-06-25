@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTripById, updateTrip } from "@/lib/trips/trips.js";
 import { defaultHotel } from "@/lib/constants/defaultHotel.js";
-import { mapTripToForm, handleTripFormChange } from "@/lib/utils/tripFormUtils.js";
-import { buildTransportPayload} from "@/lib/utils/transportUtils.js";
-import { buildHotelPayload } from "@/lib/utils/hotelUtils.js";
+import {mapTripToForm, handleTripFormChange, buildTripPayload} from "@/lib/utils/tripFormUtils.js";
 import TripForm from "@/components/trips/TripForm.jsx";
 
 export default function EditTripRoute() {
@@ -32,16 +30,8 @@ export default function EditTripRoute() {
         e.preventDefault();
         setError("");
 
-        const transport = buildTransportPayload(form);
-        const hotel = buildHotelPayload(form);
+        const payload = buildTripPayload(form);
 
-        const payload = {
-            tripType: form.tripType,
-            startDate: form.startDate,
-            endDate: form.endDate,
-            transports: [transport],
-            hotels: [hotel]
-        };
 
         try {
             await updateTrip(id, payload);
