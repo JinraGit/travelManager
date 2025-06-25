@@ -15,18 +15,38 @@ function formatDateEU(dateStr) {
 
 export default function MeetingOverviewRoute() {
     const user = useCurrentUser();
+    const [trips, setTrips] = useState([]);
+    const [selectedTripId, setSelectedTripId] = useState("ALL");
     const [meetings, setMeetings] = useState([]);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        async function loadMeetings() {
+        async function loadTrips() {
             try {
-                const trips = await fetchAllTrips(); // Hole alle Trips für den eingeloggten User
-                const allMeetings = [];
+                const loadedTrips = await fetchAllTrips();
+                setTrips(loadedTrips);
+            } catch (err) {
+                setError("Fehler beim Laden der Trips: " + (err.message || ""));
+            }
+        }
+        loadTrips();
+    }, []);
 
-                for (let trip of trips) {
-                    const m = await fetchMeetings(trip.id, user.id);
-                    allMeetings.push(...m);
+    useEffect(() => {
+        async function loadMeetings() {
+            if (!user?.id) return;
+
+            try {
+                let allMeetings = [];
+
+                if (selectedTripId === "ALL") {
+                    for (let trip of trips) {
+                        const m = await fetchMeetings(trip.id, user.id);
+                        allMeetings.push(...m);
+                    }
+                } else {
+                    const m = await fetchMeetings(Number(selectedTripId), user.id);
+                    allMeetings = m;
                 }
 
                 setMeetings(allMeetings);
@@ -35,14 +55,35 @@ export default function MeetingOverviewRoute() {
             }
         }
 
-        if (user?.id) loadMeetings();
-    }, [user]);
+        if (trips.length > 0) loadMeetings();
+    }, [selectedTripId, trips, user]);
+
+    const handleTripChange = (e) => {
+        setSelectedTripId(e.target.value);
+    };
 
     if (error) return <div className="alert alert-danger mt-4">{error}</div>;
 
     return (
         <div className="container mt-4">
             <h2>Meetings</h2>
+
+            <div className="mb-3">
+                <label className="form-label">Nach Trip filtern:</label>
+                <select
+                    className="form-select"
+                    value={selectedTripId}
+                    onChange={handleTripChange}
+                >
+                    <option value="ALL">Alle Trips</option>
+                    {trips.map((trip) => (
+                        <option key={trip.id} value={trip.id}>
+                            {trip.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <table className="table table-striped mt-3">
                 <thead>
                 <tr>
@@ -62,7 +103,7 @@ export default function MeetingOverviewRoute() {
                             <td>{meeting.name}</td>
                             <td>{formatDateEU(meeting.date)}</td>
                             <td>
-                                <Link to={`/meetings/${meeting.id}`} className="btn btn-outline-primary text-primary btn-sm">
+                                <Link to={`/meetings/${meeting.id}`} className="btn btn-outline-primary btn-sm">
                                     Details
                                 </Link>
                             </td>
