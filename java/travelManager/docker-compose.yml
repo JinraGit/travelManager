@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  green-backend:
+  tm-backend:
     build: ./backend
     container_name: travelmanager-backend
     #    restart: always
     depends_on:
-      green-db:
+      tm-db:
         condition: service_healthy
     env_file:
       - ./env/backend.env
     ports:
       - "8080:8080"
 
-  green-frontend:
+  tm-frontend:
     build: ./frontend
     container_name: travelmanager-frontend
     ports:
@@ -21,9 +21,9 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - green-backend
+      - tm-backend
 
-  green-db:
+  tm-db:
     build: ./db
     container_name: travelmanager-db
     env_file:
