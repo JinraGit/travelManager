@@ -47,7 +47,7 @@ Detaillierte Dokumentation, Use Cases, die IPERKA-Planung, User Stories, Wochenj
 - [x] Backend Grundstruktur  
 - [x] Frontend Grundgerüst  
 - [x] CRUD für Trips  
-- [X] API-Spezifikation & Tests folgen
+- [X] API-Spezifikation & Tests 
 
 ---
 
