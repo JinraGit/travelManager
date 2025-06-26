@@ -3,7 +3,7 @@ export function getTransportLabel(type) {
         case "CAR":
             return "Auto";
         case "TRAIN":
-            return "Bahn";
+            return "Zug";
         case "AIRPLANE":
             return "Flugzeug";
         case "BUS":
