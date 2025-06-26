@@ -5,6 +5,8 @@ import bbw.tm.backend.account.Account;
 import bbw.tm.backend.address.Address;
 import bbw.tm.backend.address.AddressMapper;
 import bbw.tm.backend.hotel.*;
+import bbw.tm.backend.transport.Transport;
+import bbw.tm.backend.transport.TransportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -128,7 +130,7 @@ public class TripService {
                         Map.of("id", List.of("Trip wurde nicht gefunden oder gehört nicht zu Ihrem Account"))
                 ));
 
-        // Felder aktualisieren (Schritt für Schritt prüfen)
+        // Reisetyp, Startdatum, Enddatum aktualisieren
         if (requestDTO.getTripType() != null) {
             trip.setTripType(requestDTO.getTripType());
         }
@@ -139,14 +141,18 @@ public class TripService {
             trip.setEndDate(requestDTO.getEndDate());
         }
 
-        // Aktualisierung der Hotels
-        if (requestDTO.getHotels() != null && !requestDTO.getHotels().isEmpty()) {
-            List<Hotel> hotels = requestDTO.getHotels().stream()
-                    .map(hotelCreateDTO -> {
-                        // Sicherstellen, dass Hotel fehlerfrei erstellt/verknüpft wird
-                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+        // Hotels aktualisieren
+        if (requestDTO.getHotels() != null) {
+            // Alte Zuordnungen entfernen
+            if (trip.getHotels() != null) {
+                trip.getHotels().forEach(hotel -> hotel.getTrips().remove(trip));
+            }
+            trip.getHotels().clear();
 
-                        // Automatische Verknüpfung sicherstellen
+            List<Hotel> newHotels = requestDTO.getHotels().stream()
+                    .map(hotelCreateDTO -> {
+                        Hotel hotel = findOrCreateHotel(hotelCreateDTO);
+                        // Trip-Hotel-Verknüpfung sicherstellen (Bidirektional)
                         if (!hotel.getTrips().contains(trip)) {
                             hotel.getTrips().add(trip);
                         }
@@ -154,13 +160,26 @@ public class TripService {
                     })
                     .toList();
 
-        trip.setHotels(new ArrayList<>(hotels));
+            trip.setHotels(new ArrayList<>(newHotels));
+        }
+
+        // Transports aktualisieren
+        if (requestDTO.getTransports() != null) {
+            trip.getTransports().clear(); // orphanRemoval = true entfernt alte Einträge aus DB
+
+            List<Transport> newTransports = requestDTO.getTransports().stream()
+                    .map(dto -> TransportMapper.toTransport(dto, trip))
+                    .toList();
+
+            trip.getTransports().addAll(newTransports);
+        }
+
+        // Trip speichern
+        Trip updatedTrip = tripRepository.save(trip);
+
+        return TripMapper.toResponseDTO(updatedTrip);
     }
 
-    // Trip muss gültig gespeichert werden können
-    Trip updatedTrip = tripRepository.save(trip);
-    return TripMapper.toResponseDTO(updatedTrip);
-}
 
 
     /**
