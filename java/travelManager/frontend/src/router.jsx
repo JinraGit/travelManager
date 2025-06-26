@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <ThemeProvider>
-                    <MainLayout />
+                   <MainLayout />
                 </ThemeProvider>
             </ProtectedRoute>
         ),
